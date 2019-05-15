@@ -13,7 +13,7 @@ long long gdc(long long a, long long b){
         rest = a%b;
         a=b;
         b=rest;
-    }while(rest!=0)
+    }while(rest!=0);
     return a;
 }
 

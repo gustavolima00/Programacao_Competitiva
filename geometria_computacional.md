@@ -61,6 +61,8 @@ Line new_line(Point p, Point q){
 ## Círculo
 
 - Classe círculo
+
+As funções definidas abaixo se referem ao argo, corda, setor e segmento do círculo respectivamente.
 ```c++
 const double PI = acos(-1);
 
@@ -80,5 +82,12 @@ struct Circle{
     double sector(double ang){
         return ang*r*r/2;
     }
+
+    double segment(double ang){
+        double s = sector(ang);
+        double c = chord(ang);
+        return sqrt((s-r)*(s-r)*(s-c));
+    }
+
 };
 ```
