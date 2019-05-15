@@ -6,9 +6,10 @@ Todas as notaçoes de double podem ser adaptadas a depender do problema
 
 - Classe Ponto
 ```c++
+template<typename T>
 struct Point{
-    double x;
-    double y;
+    T x;
+    T y;
 
     bool operator <(const Point& a){
         return x==a.x ? y<a.y : x<a.x;
@@ -29,16 +30,17 @@ struct Point{
 A equação da reta mostrada abaixo se refere a ax+by+c=0
 - Classe reta
 ```c++
+template<typename T>
 struct Line{
-    double a;
-    double b;
-    double c;
+    T a;
+    T b;
+    T c;
     
-    double fx(double x){
+    T fx(T x){
         return -(a*x+c)/b;
     }
 
-    double fy(double y){
+    T fy(T y){
         return -(b*y*c)/a;
     }
 

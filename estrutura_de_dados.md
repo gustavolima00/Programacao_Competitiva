@@ -1,7 +1,9 @@
 # Estrutura de dados
 
-## Fenwick Tree
-Resolve queries do tipo RSQ de 1 a n (1-indexed) em O(long n). Update pontual em O(log n).
+## Fenwick Tree - SOMA de intervalo em O(log n)
+Resolve queries do tipo RSQ de 1 a n (1-indexed) em O(log n).
+
+A arvore é contruida inicialmente zerada e para relizar a inserção dos itens deve ser feita a soma ao indice i do valor x
 ```c++
 template <typename T>
 class BITree {
@@ -37,4 +39,5 @@ public:
 };
 ```
 
-A arvore é contruida inicialmente zerada e para relizar a inserção dos itens deve ser feita a soma ao indice i do valor x
+
+

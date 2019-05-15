@@ -1,5 +1,28 @@
 # Matemática
 
+## Vetor de primos até N
+```c++
+const int MAX = 50000; // Números primos até MAX
+vector<int> primes(){
+    bitset<MAX> sieve;     
+    vector<int> ps;
+
+    sieve.set();            // Todos são "potencialmente" primos
+    sieve[1] = false;       // 1 não é primo
+
+    for (int i = 2; i <= MAX; ++i){
+        if (sieve[i]){       
+            // i é primo
+            ps.push_back(i);
+
+            for (int j = 2 * i; j <= N; j += i)
+                sieve[j] = false;
+        }
+    }
+
+    return ps;
+}
+```
 ## Maior Divisor Comum
 
 Dados dois inteiros a e b, o maior divisor comum (MDC) de a e b (notamos d = (a, b) é o inteiro não-negativo d tal que d divide a e d divide b;
@@ -18,7 +41,7 @@ long long gdc(long long a, long long b){
 }
 
 ```
-Complexidade O(log(a)+log(b))
+Complexidade O(log a +log b)
 
 ## Menor Múltiplo Comum
 
@@ -30,7 +53,7 @@ long long lcm(long long a, long long b){
 }
 
 ```
-Complexidade O(log(a)+log(b))
+Complexidade O(log a + log b)
 
 Veja que, na implementação acima, a divisão é feita antes do produto: esta ordem pode evitar overflow em alguns casos.
 
@@ -53,4 +76,4 @@ long long number_of_divisors(long long n)
     return res;
 }
 ```
-Complexidade O(sqrt(n))
+Complexidade O(sqrt n)
