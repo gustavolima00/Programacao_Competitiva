@@ -1,5 +1,6 @@
 # Estrutura de dados
 
+
 ## Fenwick Tree
 Resolve queries do tipo RSQ de 1 a n (1-indexed) em O(log n).
 
