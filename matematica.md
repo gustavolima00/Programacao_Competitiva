@@ -43,6 +43,9 @@ long long gdc(long long a, long long b){
 ```
 Complexidade O(log a +log b)
 
+<br>
+<br>
+
 ## Menor Múltiplo Comum
 
 Sejam a e b dois inteiros. O menor múltiplo comum (MMC) de a e b (notamos m = [a,b]) é o inteiro m tal que a divide m e b divide m;
