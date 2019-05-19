@@ -2,20 +2,26 @@
 
 ## Ponto
 
-Todas as notaçoes de double podem ser adaptadas a depender do problema
+Todas as notações ultilizam double, o que pode ser adaptado dependendo da questão.
 
-- Classe Ponto
+### Classe Ponto
 ```c++
-template<typename T>
+const double EPS = 1e-9;
 struct Point{
-    T x;
-    T y;
+    double x;
+    double y;
+
+    Point(double a, double b) : x(a), y(b) {} ;
+    Point() : x(0), y(0) {} ;
 
     bool operator <(const Point& a){
-        return x==a.x ? y<a.y : x<a.x;
+        if (fabs(x-a.x)<EPS) // Se x==x
+            return (y<a.y+EPS) and (y<a.y-EPS); //y<y
+        else
+            return (x<a.x+EPS) and (x<a.x-EPS); // x<x
     }
     bool operator ==(const Point& a){  
-        return x==a.x && y=a.y;
+        return fabs(x-a.x)<EPS && fabs(y-a.y)<EPS;
     }
     double distance(Point a){
         return hypot(x-a.x, y-a.y);
@@ -25,40 +31,156 @@ struct Point{
 
 ```
 
+### Discriminante entre 3 pontos
+
+<img src="img/discriminante.png" alt="img" width="200" height="">
+
+- dis=0 caso R pertença ao plano
+- dis=1 caso R esteja no semiplano à **esquerda** da reta
+- dis=-1 caso R esteja no semiplano à **direita** da reta
+
+```c++
+int dis(Point p, Point q, Point r){
+    double ans = (p.x*q.y+p.y*r.x+q.x*r.y)-(r.x*q.y+r.y*p.x+q.x*p.y);
+    if(fabs(ans)<EPS) return 0;
+    else if(ans>0) return 1;
+    else return -1;
+}
+
+```
+## Vetores
+
+### Classe
+A representação de vetores é igual a de ponto, porém com diferentes funções
+```c++
+struct Vector{
+    double x;
+    double y;
+    Vector(double a, double b) : x(a), y(b) {};
+    Vector(): x(1), y(1) {};
+
+    //Apenas se a classe ponto estiver emplementada
+    // Vetor de A apontando para B
+    Vector(Point a, Point b){
+        x = b.x-a.x;
+        y = b.y-a.y;
+    }; 
+
+    double size(){
+        return hypot(x, y);
+    }
+    double ang(){
+        return atan2(y, x);
+    }
+    void rotate(double theta){
+        double r = size();
+        double w = ang();
+        x = r*cos(w-theta);
+        y = r*sin(w-theta);
+    }
+    void rotate(Point c, double theta){
+        x-=c.x; y-=c.y;
+        rotate(theta);
+        x+=c.x; y+=c.y;
+    }
+};
+```
+<br>
+<br>
+
+### Produto interno entre 2 vetores
+
+- produto interno=0 Vetores ortogonais
+
+<img src="img/ortogonal.png" alt="img" width="" height="80"> 
+
+- produto interno=0 Ângulo obtuo 
+
+<img src="img/obtuso.png" alt="img" width="" height="80"> 
+
+- produto interno=0 Ângulo agudo
+
+<img src="img/agudo.png" alt="img" width="" height="80">
+
+```c++
+double inter_prod(Vector u, Vector v){
+    return u.x*v.x+u.y*v.y;
+}
+```
+
+### Angulo entre 2 vetores 
+
+```c++
+const double EPS = 1e-9;
+const double PI = acos(-1);
+
+double ang(Vector u, Vector v){
+    double p = inter_prod(u, v);
+    if(fabs(p)<EPS) return PI;
+    else return acos(p/(u.size()*v.size()));
+}
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
 ## Reta
 
+### Classe
 A equação da reta mostrada abaixo se refere a ax+by+c=0
 - Classe reta
 ```c++
-template<typename T>
 struct Line{
-    T a;
-    T b;
-    T c;
+    double a;
+    double b;
+    double c;
+
+    Line() : a(1), b(1), c(1) {};
+    //Apenas se a classe ponto estiver emplementada
+    Line(Point p, Point q){
+        a = p.y-q.y;
+        b = q.x-p.x;
+        c = p.x*p.y-q.x*p.y;
+    }
     
-    T fx(T x){
+    double fx(double x){
         return -(a*x+c)/b;
     }
 
-    T fy(T y){
+    double fy(double y){
         return -(b*y*c)/a;
     }
 
 };
 ```
 
-Criação de uma reta a partir de dois pontos
-```c++
-Line new_line(Point p, Point q){
-    Line ans;
-    ans.a = p.y-q.y;
-    ans.b = q.x-p.x;
-    ans.c = p.x*p.y-q.x*p.y;
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-    return ans;
-};
 
-```
 
 ## Círculo
 
