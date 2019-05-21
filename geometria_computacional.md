@@ -92,11 +92,11 @@ struct Vector{
 
 <img src="img/ortogonal.png" alt="img" width="" height="80"> 
 
-- produto interno=0 Ângulo obtuo 
+- produto interno<0 Ângulo obtuo 
 
 <img src="img/obtuso.png" alt="img" width="" height="80"> 
 
-- produto interno=0 Ângulo agudo
+- produto interno>0 Ângulo agudo
 
 <img src="img/agudo.png" alt="img" width="" height="80">
 
@@ -114,8 +114,7 @@ const double PI = acos(-1);
 
 double ang(Vector u, Vector v){
     double p = inter_prod(u, v);
-    if(fabs(p)<EPS) return PI;
-    else return acos(p/(u.size()*v.size()));
+    return acos(p/(u.size()*v.size()));
 }
 ```
 
