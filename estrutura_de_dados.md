@@ -39,6 +39,7 @@ public:
     }
 };
 ```
+
 ## Fenwick Tree [range update em log(n) point query]
 
 ```c++
@@ -76,6 +77,7 @@ class BITree {
                 }
 };
 ```
+
 ## Fenwick Tree bidimensional
 
 ```c++
@@ -116,3 +118,77 @@ public:
 };
 
 ```
+
+## Fenwick Tree - Multiplicação query product em O(log n) e point update
+
+- Árvore faz a atualização de um índice do vetor multiplicando-o por uma constante k
+- Toda a classe é feita em long long por se tratar de multiplicação entre inteiros
+
+```c++
+class BITree{
+private:
+    size_t N;
+    vector<long long> ft;
+    vector<int> sz; // 1 se o indice i for 0
+
+    int LSB(const long long& n) { return n&(-n); }
+
+    long long RPQ(int i){
+        long long prod = 1;
+        while(i){
+            prod*=ft[i];
+            i-=LSB(i);
+        }
+        return prod;
+    }
+
+    // Funções rsq para o vetor com zeros
+    int RSQ(int i){
+        int sum = 0;
+        while(i){
+            sum+=sz[i];
+            i-=LSB(i);
+        }
+        return sum;
+    }
+
+    int RSQ(int i, int j){
+        return RSQ(j)-RSQ(i-1);
+    }
+
+    void multiply(int i, long long k){
+        while(i <= N){
+            ft[i] *= k;
+            i+=LSB(i);
+        }
+    }
+
+    void add(int i, int k){
+        while(i <= N){
+            sz[i] += k;
+            i+=LSB(i);
+        }
+    }
+
+public:
+
+    BITree(int n) : N(n), ft(n+1, 1), sz(n+1, 0) { }
+
+    long long RPQ(int i, int j){
+        long long p = RPQ(j)/RPQ(i-1);
+        int z = RSQ(i, j);
+
+        if(z) return 0;
+        else return p;
+    }
+
+    void update(int i, const long long& k){
+        if(k)
+            multiply(i, k);
+        else if (RSQ(i, i)==0)
+            add(i, 1);
+    }
+    
+};
+```
+

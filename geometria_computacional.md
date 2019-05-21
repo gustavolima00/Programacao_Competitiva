@@ -85,8 +85,6 @@ struct Vector{
     }
 };
 ```
-<br>
-<br>
 
 ### Produto interno entre 2 vetores
 
@@ -121,17 +119,6 @@ double ang(Vector u, Vector v){
 }
 ```
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
 ## Reta
 
 ### Classe
@@ -161,26 +148,6 @@ struct Line{
 
 };
 ```
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
 
 ## Círculo
 

@@ -12,11 +12,9 @@ const int MAXW = 20000; // Número máximo de peso carregado
 int mt[MAXN+1][MAXW+1]; // Matríz global é iniciada com zeros
 
 int knapSack(int w, int wt[], int val[], int n){
-    for(int i=0; i<=n; i++){
-        for(int j=0; j<=w; j++){
-            if(i==0 || j==0)
-                mt[i][j]=0;
-            else if(wt[i-1]<=j)
+    for(int i=1; i<=n; i++){
+        for(int j=1; j<=w; j++){
+            if(wt[i-1]<=j)
                 mt[i][j] = max(val[i-1]+mt[i-1][j-wt[i-1]], mt[i-1][j]);
             else
                 mt[i][j] = mt[i-1][j];
