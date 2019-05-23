@@ -1,21 +1,21 @@
 # Estrutura de dados
 
 
-## Fenwick Tree [RSQ em log(n) soma pontual]
-Resolve queries do tipo RSQ de 1 a n (1-indexed) em O(log n).
+## Fenwick Tree
+Todas as implementações abaixo são indexadas em 1 portanto **não deve ser feito a consulta do índice 1**
 
-A arvore é contruida inicialmente zerada e para relizar a inserção dos itens deve ser feita a soma ao indice i do valor x
+### Range Sum Query em O(log n) e atualização com soma pontual
+
 ```c++
-template <typename T>
 class BITree {
 private:
-    vector<T> ts;
+    vector<long long> ts;
     size_t N;
 
     int LSB(int n) { return n&(-n); }
 
-    T RSQ(int i){
-        T sum = 0;
+    long long RSQ(int i){
+        long long sum = 0;
 
         while(i>=1){
             sum+=ts[i];
@@ -26,11 +26,11 @@ private:
 public:
     BITree(size_t n) : ts(n+1, 0), N(n) {};
 
-    T RSQ(int i, int j){
+    long long RSQ(int i, int j){
         return RSQ(j) - RSQ(i-1);
     }
 
-    void add(size_t i, const T& x){
+    void add(size_t i, const long long& x){
         if(i==0) return;
         while(i<=N){
             ts[i]+=x;
@@ -40,13 +40,12 @@ public:
 };
 ```
 
-## Fenwick Tree [range update em log(n) point query]
+### Range update em O(log n) query pontual
 
 ```c++
-template <typename T>
 class BITree {
         private:
-                vector<T> ts;
+                vector<long long> ts;
                 size_t N;
 
                 int LSB(int n) { return n&(-n); }
@@ -57,8 +56,8 @@ class BITree {
                                 i += LSB(i);
                         }
                 }
-                T RSQ(int i){
-                        T sum = 0;
+                long long RSQ(int i){
+                        long long sum = 0;
 
                         while(i>=1){
                                 sum+=ts[i];
@@ -71,27 +70,26 @@ class BITree {
 
                 ll value_at(int i) { return RSQ(i); }
 
-                void range_add(size_t i, size_t j, T x){
+                void range_add(size_t i, size_t j, long long x){
                         add(i, x);
                         add(j+1, -x);
                 }
 };
 ```
 
-## Fenwick Tree bidimensional
+### Query bidimencional em O(log n.m) update com soma pontual 
 
 ```c++
-template<typename T>
 class BITree2D{
 private:
     size_t rows;
     size_t columns;
-    vector<vector<T>> ft;
+    vector<vector<long long>> ft;
 
-    int LSB(T n) { return n&(-n); }
+    int LSB(long long n) { return n&(-n); }
 
-    T RSQ(int y, int x){
-        T sum = 0;
+    long long RSQ(int y, int x){
+        long long sum = 0;
 
         for(int i=y; i>0; i-=LSB(i))
             for(int j=x; j>0; j-=LSB(j))
@@ -100,16 +98,16 @@ private:
         return sum;
     }
 public:
-    BITree2D(size_t y, size_t x) : ft(y+1, vector<T>(x+1, 0)), rows(y), columns(x) {}
+    BITree2D(size_t y, size_t x) : ft(y+1, vector<long long>(x+1, 0)), rows(y), columns(x) {}
 
     // Y e X sao as coordenadas do ponto superior
     // x e y sao as coordenadas do ponto inferior 
     // RSQ vai retornar a soma do quadrado formado pelos pontos
-    T RSQ(int y, int x, int Y, int X){ 
+    long long RSQ(int y, int x, int Y, int X){ 
         return RSQ(Y, X) - RSQ(Y, x-1) - RSQ(y-1, X) + RSQ(y-1, x-1);
     }
     
-    void add(int y, int x, T v){
+    void add(int y, int x, long long v){
         for(int i=y; i<=rows; i+=LSB(i))
             for(int j=x; j<=columns; j+=LSB(j))
                 ft[i][j] += v;
@@ -119,10 +117,7 @@ public:
 
 ```
 
-## Fenwick Tree - Multiplicação query product em O(log n) e point update
-
-- Árvore faz a atualização de um índice do vetor multiplicando-o por uma constante k
-- Toda a classe é feita em long long por se tratar de multiplicação entre inteiros
+### Range Product Query em O(log n) e update com multiplicação pontual
 
 ```c++
 class BITree{
