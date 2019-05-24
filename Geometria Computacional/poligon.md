@@ -47,7 +47,6 @@ double perimeter(polygon &P){
     double result = 0.0;
     int n = P.size();
     for(int i=0; i<n; i++) result+=dist(P[i], P[(i+1)%n]);
-
     return result; 
 }
 
@@ -93,5 +92,49 @@ polygon cutPolygon(polygon &P, point a, point b){
             R.push_back(lineIntersectSeg(P[i], P[(i+1)%n], a, b));
     }
     return make_polygon(R);
+}
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## Convex Hull
+Dado um conjunto de pontos retorna o polígono que contém todos os pontos em O(n log n). Caso presice consederar os pontos no meio de uma aresta trocar ccw para >=0. CUIDADO: Se todos os pontos forem colineares, vai dar RTE.
+
+
+```c++
+point pivot(0, 0);
+
+bool angleCmp(point a, point b){
+    if(collinear(pivot, a, b))
+        return inner(pivot-a, pivot-a) < inner(pivot-b, pivot-b);
+    return cross(a-pivot, b-pivot) >=0;
+}
+
+polygon convexHull(vector<point> P){
+    int i, j, n = P.size();
+    if( n<=2 ) return P;
+    int P0 = leftmostIndex(P);
+    swap(P[0], P[P0]);
+    pivot = P[0];
+    sort(++P.begin(), P.end(), angleCmp);
+    vector<point> S;
+    S.push_back(P[n-1]);
+    S.push_back(P[0]);
+    S.push_back(P[1]);
+    for(i=2; i<n;){
+        j=int(S.size()-1);
+        if(ccw(S[j-1], S[j], P[i]))
+            S.push_back(P[i++]);
+        else S.pop_back();
+    }
+    reverse(S.begin(), S.end());
+    S.pop_back();
+    reverse(S.begin(), S.end());
+    return S;
 }
 ```

@@ -99,6 +99,8 @@ point lineIntersectSeg(point p, point q, point A, point B){
     return ( (p-q)*(a/c) ) - ( (A-B)*(b/c) );
 }
 
+
+
 // Teste de paralelidade
 bool parallel(point a, point b){
     return fabs(cross(a, b))<EPS;
