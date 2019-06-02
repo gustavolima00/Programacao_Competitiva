@@ -45,9 +45,7 @@ struct point{
 };
 ```
 
-<br>
-<br>
-<br>
+<div style="page-break-after: always;"></div>
 
 ## Funções
 ```c++
