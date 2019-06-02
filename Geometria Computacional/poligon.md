@@ -3,12 +3,19 @@
 O polígono é representado por um vetor de pontos portanto não tem estrutura.
 
 ## Funções
-
+### Descrição
+- **(double/int)** signedArea: Retorna área do polígono (Pode dar valor negativo)
+- **(double/int)** area: Retorna área positiva do polígono
+- **(double/int)** leftmostIndex: Índice do ponto mais a esquerda
+- **(double/int)** make_polygon: Coloca o índice do ponto mais a esquerda como 0 (Necessário para as funções que chamam polygon)
+- **(double)** perimeter: Calcula o perímetro do polígono
+- **(double/int)** isConvex: Verifica se polígono é convexo
+- **(double)** inPolytgon: Verifica se um ponto está no polígono
+- **(double)** cutPolygon: Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
 ```c++
 using polygon = vector<point>;
 const double PI = acos(-1);
 
-// Área do polígono, com sinal
 double signedArea(polygon &P){
     double result = 0.0;
     int n = P.size();
@@ -17,13 +24,9 @@ double signedArea(polygon &P){
     }
     return result/2.0;
 }
-
-// Área positiva do polígono
 double area(polygon &P){
     return fabs(signedArea(P));
 }
-
-// Índice do ponto mais a esquerda do vetor de pontos 
 int leftmostIndex(vector<point>& P){
     int ans = 0;
     for(int i=1; i<int(P.size()); i++){
@@ -31,8 +34,6 @@ int leftmostIndex(vector<point>& P){
     }
     return ans;
 }
-
-// Retorna o polígono sem crusamento de pontos (Eu acho kkk)
 polygon make_polygon(vector<point> P){
     if(signedArea(P)<0.0) 
         reverse(P.begin(), P.end());
@@ -41,16 +42,12 @@ polygon make_polygon(vector<point> P){
     rotate(P.begin(), P.begin()+li, P.end());
     return P;
 }
-
-// Perímetro do polígono
 double perimeter(polygon &P){
     double result = 0.0;
     int n = P.size();
     for(int i=0; i<n; i++) result+=dist(P[i], P[(i+1)%n]);
     return result; 
 }
-
-// Verifica se polígono é convexo
 bool isConvex(polygon& P){
     int n = P.size();
     if( n<3 ) return false;
@@ -61,8 +58,6 @@ bool isConvex(polygon& P){
     }
     return true;
 }
-
-// Verifica se um ponto está dentro do polígono
 bool inPolytgon(polygon &P, point p){
     if (P.size() == 0u) return false;
     double sum = 0.0;
@@ -77,9 +72,6 @@ bool inPolytgon(polygon &P, point p){
     }
     return fabs(fabs(sum)-2*PI) < EPS; 
 }
-
-// Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
-
 polygon cutPolygon(polygon &P, point a, point b){
     vector<point> R;
     double left1, left2;
@@ -95,12 +87,7 @@ polygon cutPolygon(polygon &P, point a, point b){
 }
 ```
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<div style="page-break-after: always;"></div>
 
 ## Convex Hull
 Dado um conjunto de pontos retorna o polígono que contém todos os pontos em O(n log n). Caso presice consederar os pontos no meio de uma aresta trocar ccw para >=0. CUIDADO: Se todos os pontos forem colineares, vai dar RTE.
@@ -139,18 +126,8 @@ polygon convexHull(vector<point> P){
 }
 ```
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<div style="page-break-after: always;"></div>
+
 
 ## Monotone chain
 
@@ -186,3 +163,5 @@ polygon monotone_chain(const vector<point> points){
     return lower;
 }
 ```
+
+<div style="page-break-after: always;"></div>

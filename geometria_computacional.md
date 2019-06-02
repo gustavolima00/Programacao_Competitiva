@@ -1,10 +1,7 @@
 
-<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
-<div  style="font-size: 40px" align="center">
+<div  style="font-size: 34px">
 Geometria Computacional
 </div>
-
-<div style="page-break-after: always;"></div>
 
 # Ponto 2D / Vetor
 
@@ -107,9 +104,8 @@ point lineIntersectSeg(point p, point q, point A, point B){
     double b = cross(p, q);
     return ( (p-q)*(a/c) ) - ( (A-B)*(b/c) );
 }
-bool parallel(point a, point b){
-    return fabs(cross(a, b))<EPS;
-}
+bool parallel(point a, point b){ return fabs(cross(a, b))<EPS; }
+
 bool segIntersects(point a, point b, point p, point q){
     if(parallel(a-b, p-q)){
         return between(a, p, q) || between(a, q, b) ||
@@ -213,4 +209,221 @@ circle incircle( point p1, point p2, point p3){
 }
 
 ```
+<div style="page-break-after: always;"></div>
+
+# Triângulo 2D 
+
+## Estrutura
+### Descrição
+
+- **(double)** perimeter: Calcula perímetro do triângulo
+- **(double)** semiPerimeter: Calcula semi-perímetro do triângulo
+- **(double)** area: Calcula área do triângulo
+- **(double)** rInCircle: Calcula o raio do círculo inscrito no triângulo
+- **(double)** inCircle: Retorna o círculo inscrito do triângulo
+- **(double)** rCircumCircle: Calcula raio do círculo circunscrito no triângulo
+- **(double)** circumCircle: Retorna o círculo circunscrito do triângulo
+- **(double/int)** isInside: Retorna 0 caso o ponto esteja dentro do triângulo, 1 caso esteja na borda e 2 caso esteja fora 
+
+
+```c++
+struct triangle{
+    point a, b, c;
+
+    triangle() { a=b=c=point(); }
+    triangle(point _a, point _b, point _c) : a(_a), b(_b), c(_c) {}
+
+    double perimeter() { return dist(a, b) + dist(b, c) + dist(c, a); }
+    double semiPerimeter() { return perimeter()/2.0; }
+    double area(){
+        double s = semiPerimeter(), ab = dist(a, b), bc = dist(b, c), ca = dist(c, a);
+        return sqrt(s*(s-ab)*(s-bc)*(s-ca));
+    }
+    double rInCircle() {
+        return area()/semiPerimeter();
+    }
+    circle inCircle() { return incircle(a, b, c); }
+    double rCircumCircle() {
+        return dist(a, b)*dist(b, c)*dist(c, a)/(4.0*area());
+    }
+    circle circumCircle(){ return circumcircle(a, b, c); }
+    bool isInside(point p){
+        double u = cross(b-a, p-a)*cross(b-a, c-a);
+        double v = cross(c-b, p-b)*cross(c-b, a-b);
+        double w = cross(a-c, p-c)*cross(a-c, b-c);
+        if (u>0.0 and v>0.0 and w>0.0) return 0;
+        if (u<0.0 or v<0.0 or w<0.0) return 2;
+        else return 1;
+    }// 0 = inside/ 1 = border/ 2=outside
+};
+```
+<div style="page-break-after: always;"></div>
+
+# Polígono 2D
+
+O polígono é representado por um vetor de pontos portanto não tem estrutura.
+
+## Funções
+### Descrição
+- **(double/int)** signedArea: Retorna área do polígono (Pode dar valor negativo)
+- **(double/int)** area: Retorna área positiva do polígono
+- **(double/int)** leftmostIndex: Índice do ponto mais a esquerda
+- **(double/int)** make_polygon: Coloca o índice do ponto mais a esquerda como 0 (Necessário para as funções que chamam polygon)
+- **(double)** perimeter: Calcula o perímetro do polígono
+- **(double/int)** isConvex: Verifica se polígono é convexo
+- **(double)** inPolytgon: Verifica se um ponto está no polígono
+- **(double)** cutPolygon: Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
+```c++
+using polygon = vector<point>;
+const double PI = acos(-1);
+
+double signedArea(polygon &P){
+    double result = 0.0;
+    int n = P.size();
+    for(int i=0; i<n; i++){
+        result+=cross(P[i], P[(i+1)%n]);
+    }
+    return result/2.0;
+}
+double area(polygon &P){
+    return fabs(signedArea(P));
+}
+int leftmostIndex(vector<point>& P){
+    int ans = 0;
+    for(int i=1; i<int(P.size()); i++){
+        if (P[i]<P[ans]) ans = i;
+    }
+    return ans;
+}
+polygon make_polygon(vector<point> P){
+    if(signedArea(P)<0.0) 
+        reverse(P.begin(), P.end());
+
+    int li = leftmostIndex(P);
+    rotate(P.begin(), P.begin()+li, P.end());
+    return P;
+}
+
+double perimeter(polygon &P){
+    double result = 0.0;
+    int n = P.size();
+    for(int i=0; i<n; i++) result+=dist(P[i], P[(i+1)%n]);
+    return result; 
+}
+bool isConvex(polygon& P){
+    int n = P.size();
+    if( n<3 ) return false;
+    bool left = ccw(P[0], P[1], P[2]);
+    for(int i=1; i<n; i++){
+        if(ccw(P[i], P[(i+1)%n], P[(i+2)%n]) != left)
+            return false;
+    }
+    return true;
+}
+bool inPolytgon(polygon &P, point p){
+    if (P.size() == 0u) return false;
+    double sum = 0.0;
+    int n = P.size();
+    for(int i=0; i<n; i++){
+        if(P[i] == p || between(P[i], p, P[(i+1)%n]))
+            return true;
+        if(ccw(p, P[i], P[(i+1)%n])) 
+            sum+=angle(P[i], p, P[(i+1)%n]);
+        else 
+            sum-=angle(P[i], p, P[(i+1)%n]);
+    }
+    return fabs(fabs(sum)-2*PI) < EPS; 
+}
+polygon cutPolygon(polygon &P, point a, point b){
+    vector<point> R;
+    double left1, left2;
+    int n = P.size();
+    for(int i=0; i<n; i++){
+        left1 = cross(b-a, P[i]-a);
+        left2 = cross(b-a, P[(i+1)%n]-a);
+        if (left1 > -EPS) R.push_back(P[i]);
+        if (left1 * left2 < -EPS)
+            R.push_back(lineIntersectSeg(P[i], P[(i+1)%n], a, b));
+    }
+    return make_polygon(R);
+}
+```
+
+<div style="page-break-after: always;"></div>
+
+## Convex Hull
+Dado um conjunto de pontos retorna o polígono que contém todos os pontos em O(n log n). Caso presice consederar os pontos no meio de uma aresta trocar ccw para >=0. CUIDADO: Se todos os pontos forem colineares, vai dar RTE.
+
+
+```c++
+point pivot(0, 0);
+
+bool angleCmp(point a, point b){
+    if(collinear(pivot, a, b))
+        return inner(pivot-a, pivot-a) < inner(pivot-b, pivot-b);
+    return cross(a-pivot, b-pivot) >=0;
+}
+
+polygon convexHull(vector<point> P){
+    int i, j, n = P.size();
+    if( n<=2 ) return P;
+    int P0 = leftmostIndex(P);
+    swap(P[0], P[P0]);
+    pivot = P[0];
+    sort(++P.begin(), P.end(), angleCmp);
+    vector<point> S;
+    S.push_back(P[n-1]);
+    S.push_back(P[0]);
+    S.push_back(P[1]);
+    for(i=2; i<n;){
+        j=int(S.size()-1);
+        if(ccw(S[j-1], S[j], P[i]))
+            S.push_back(P[i++]);
+        else S.pop_back();
+    }
+    reverse(S.begin(), S.end());
+    S.pop_back();
+    reverse(S.begin(), S.end());
+    return S;
+}
+```
+
+<div style="page-break-after: always;"></div>
+
+
+## Monotone chain
+
+- Com esse algorítimo é possível conseguir o polígono que contém todos os pontos em O(n log n) com todos os pontos consistindo como inteiros e não ponto flutuante. **Caso presice consederar os pontos no meio de uma aresta trocar ccw para >=0** 
+- Nessa rotina é preciso usar a struct point como **long long.**
+
+```c++
+using polygon = vector<point>;
+
+polygon monotone_chain(const vector<point> points){
+    vector<point> P(points);
+    sort(P.begin(), P.end());
+    vector<point> lower, upper;
+    for(const auto& p: P){
+        int n = int(lower.size());
+        while(n>=2 and ccw(lower[n-2], lower[n-1], p)){
+            lower.pop_back();
+            n = int(lower.size());
+        }
+        lower.push_back(p);
+    }
+    reverse(P.begin(), P.end());
+    for(const auto& p: P){
+        int n = int(upper.size());
+        while(n>=2 and ccw(upper[n-2], upper[n-1], p)){
+            upper.pop_back();
+            n = int(upper.size());
+        }
+        upper.push_back(p);
+    }
+    lower.pop_back();
+    lower.insert(lower.end(), upper.begin(), upper.end()-1);
+    return lower;
+}
+```
+
 <div style="page-break-after: always;"></div>
