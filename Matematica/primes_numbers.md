@@ -2,10 +2,10 @@
 
 ## Descrição 
 
-- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( N log log N)**;
-- is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√N/log N)**
-- is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√N)**
-
+- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( n log log n)**;
+- is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√n/log n)**
+- is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√n)**
+- num_div: Calcula o número de divisóres de um número mais rapdamente com os primos pré-calculados até √n, complexidade **O(n^(1/pi))**
 ```c++
 using ll = long long;
 const long long MAX = 10000009;
@@ -25,14 +25,12 @@ void sieve(ll n){
         }
     }
 }
-
 bool is_prime_sieve(ll n){
     if(n<=(ll)sievesize) return bs[n];
     for(size_t i=0; i<primes.size() and primes[i]*primes[i]<=n; ++i)
         if(n%primes[i] == 0) return false;
     return true;
 }
-
 bool is_prime(ll n){
     if(n<0) n=-n;
     if(n<5 or n%2==0 or n%3==0)
@@ -43,6 +41,17 @@ bool is_prime(ll n){
         if( p+2<n and n%(p+2)==0 ) return false;
     }
     return true;
+}
+ll num_div(ll n){
+    ll i=0, p=primes[i], ans=1;
+    while(p*p<=n){
+        ll power = 0;
+        while(n%p==0) n/=p, ++power;
+        ans *= (power+1);
+        p = primes[++i];
+    }
+    if(n!=1) ans*=2;
+    return ans;
 }
 ```
 <div style="page-break-after: always;"></div>

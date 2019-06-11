@@ -6,10 +6,9 @@ Matemática
 
 ## Descrição 
 
-- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( N log log N)**;
-- is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√N/log N)**
-- is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√N)**
-
+- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( n log log n)**;
+- is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√n/log n)**
+- is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√n)**
 ```c++
 using ll = long long;
 const long long MAX = 10000009;
@@ -29,14 +28,12 @@ void sieve(ll n){
         }
     }
 }
-
 bool is_prime_sieve(ll n){
     if(n<=(ll)sievesize) return bs[n];
     for(size_t i=0; i<primes.size() and primes[i]*primes[i]<=n; ++i)
         if(n%primes[i] == 0) return false;
     return true;
 }
-
 bool is_prime(ll n){
     if(n<0) n=-n;
     if(n<5 or n%2==0 or n%3==0)
@@ -51,15 +48,18 @@ bool is_prime(ll n){
 ```
 <div style="page-break-after: always;"></div>
 
-# Maior Divisor Comum
+# Divisores
 
-Dados dois inteiros a e b, o maior divisor comum (MDC) de a e b (notamos d = (a, b) é o inteiro não-negativo d tal que d divide a e d divide b;
-se c divide a e c divide b, então c divide d.
-
-
+## Descrição 
+- gdc: Calcula maior divisor comum em complexidade **O(log a+b)**
+- lmc: Calcula o menor múltiplo comum em complexidade **O(log a+b)**
+- num_div: Calcula o números de divisores de N em complexidade **O(√n)**
+- num_div: Calcula o número de divisóres de um número mais rapdamente com os primos pré-calculados até √n, complexidade **O(n^(1/pi))**
 ```c++
-long long gdc(long long a, long long b){
-    long long rest;
+using ll = long long;
+
+ll gdc(ll a, ll b){
+    ll rest;
     do{
         rest = a%b;
         a=b;
@@ -67,44 +67,27 @@ long long gdc(long long a, long long b){
     }while(rest!=0);
     return a;
 }
-
-```
-Complexidade O(log a +log b)
-
-<br>
-<br>
-
-# Menor Múltiplo Comum
-
-Sejam a e b dois inteiros. O menor múltiplo comum (MMC) de a e b (notamos m = [a,b]) é o inteiro m tal que a divide m e b divide m;
-
-```c++
-long long lcm(long long a, long long b){
-    return (a/gcd(a, b))*b;
+ll lmc(ll a, ll b){
+    return a/gdc(a, b)*b;
 }
-
-```
-Complexidade O(log a + log b)
-
-Veja que, na implementação acima, a divisão é feita antes do produto: esta ordem pode evitar overflow em alguns casos.
-
-
-# Número de Divisores
-
-A fatoração de um número n também permite computar o número de divisores deste número: basta fazer o produto de todos os expoentes da fatoração, somados cada um de uma unidade. Veja o código abaixo.
-
-```c++
-long long number_of_divisors(long long n)
-{
-    long long res = 0;
-
-    for (long long i=1; i*i <= n; ++i)
-    {
-        if (n%i == 0)
-            res += (i == n/i ? 1 : 2);
+ll num_div(ll n){
+    ll ans=0;
+    for(ll i=1; i*i<=n; ++i)
+        if(n%i == 0)
+            ans+=( i==n/i ? 1 : 2);
+    return ans;
+}
+ll num_div2(ll n){
+    ll i=0, p=primes[i], ans=1;
+    while(p*p<=n){
+        ll power = 0;
+        while(n%p==0) n/=p, ++power;
+        ans *= (power+1);
+        p = primes[++i];
     }
-
-    return res;
+    if(n!=1) ans*=2;
+    return ans;
 }
 ```
-Complexidade O(sqrt n)
+<div style="page-break-after: always;"></div>
+
