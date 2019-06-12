@@ -6,11 +6,11 @@
 - **(double)** perimeter: Calcula perímetro do triângulo
 - **(double)** semiPerimeter: Calcula semi-perímetro do triângulo
 - **(double)** area: Calcula área do triângulo
-- **(double)** rInCircle: Calcula o raio do círculo inscrito no triângulo
-- **(double)** inCircle: Retorna o círculo inscrito do triângulo
-- **(double)** rCircumCircle: Calcula raio do círculo circunscrito no triângulo
-- **(double)** circumCircle: Retorna o círculo circunscrito do triângulo
-- **(double/int)** isInside: Retorna 0 caso o ponto esteja dentro do triângulo, 1 caso esteja na borda e 2 caso esteja fora 
+- **(double)** r_incircle: Calcula o raio do círculo inscrito no triângulo
+- **(double)** in_circle: Retorna o círculo inscrito do triângulo
+- **(double)** r_circumcircle: Calcula raio do círculo circunscrito no triângulo
+- **(double)** circum_circle: Retorna o círculo circunscrito do triângulo
+- **(double/int)** is_inside: Retorna 0 caso o ponto esteja dentro do triângulo, 1 caso esteja na borda e 2 caso esteja fora 
 
 
 ```c++
@@ -26,19 +26,19 @@ struct triangle{
         double s = semiPerimeter(), ab = dist(a, b), bc = dist(b, c), ca = dist(c, a);
         return sqrt(s*(s-ab)*(s-bc)*(s-ca));
     }
-    double rInCircle() {
+    double r_incircle() {
         return area()/semiPerimeter();
     }
-    circle inCircle() {
+    circle in_circle() {
         return incircle(a, b, c);
     }
-    double rCircumCircle() {
+    double r_circumcircle() {
         return dist(a, b)*dist(b, c)*dist(c, a)/(4.0*area());
     }
-    circle circumCircle(){
+    circle circum_circle(){
         return circumcircle(a, b, c);
     }
-    bool isInside(point p){
+    bool is_inside(point p){
         double u = cross(b-a, p-a)*cross(b-a, c-a);
         double v = cross(c-b, p-b)*cross(c-b, a-b);
         double w = cross(a-c, p-c)*cross(a-c, b-c);
@@ -48,3 +48,4 @@ struct triangle{
     }// 0 = inside/ 1 = border/ 2=outside
 };
 ```
+<div style="page-break-after: always;"></div>

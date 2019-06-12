@@ -4,13 +4,13 @@
 
 ### Descrição
 
-- area: Calcula área do círculo
-- chord: Calcula o comprimento da corda com ângulo em radiandos
-- sector: Calula o comprimento do setor com ângulo radianos
-- intersects: Verifica se os círculos se interceptem
-- contains: Verifica se um ponto p está dentro do círculo
-- getTangentPoint: Retorna os 2 pontos que formam as retas com p tangentes ao círculo, (A função asin retorna nan se o ponto estiver dentro do círculo)
-- getIntersectionPoints: Retorna os 2 pontos de intersecção entre os círculos
+- **(double)** area: Calcula área do círculo
+- **(double)** chord: Calcula o comprimento da corda com ângulo em radiandos
+- **(double)** sector: Calula o comprimento do setor com ângulo radianos
+- **(double)** intersects: Verifica se os círculos se interceptem
+- **(double)** contains: Verifica se um ponto p está dentro do círculo
+- **(double)** tangent_points: Retorna os 2 pontos que formam as retas com p tangentes ao círculo, (A função asin retorna nan se o ponto estiver dentro do círculo)
+- **(double)** intersection_points: Retorna os 2 pontos de intersecção entre os círculos
 
 ```c++
 const double PI = acos(-1);
@@ -29,7 +29,7 @@ struct circle{
         return dist(c, other.c) < r+other.r;
     }
     bool contains(point p) { return dist(c, p) <= r + EPS; }
-    pair<point, point> getTangentPoint( point p ){
+    pair<point, point> tangent_points( point p ){
         double d1 = dist(p, c), theta = asin(r/d1);
         point p1 = rotate(c-p, -theta);
         point p2 = rotate(c-p, theta);
@@ -37,7 +37,7 @@ struct circle{
         p2 = p2*(sqrt(d1*d1-r*r)/d1)+p;
         return make_pair(p1, p2);
     }
-    pair<point, point> getIntersectionPoints(circle other){
+    pair<point, point> intersection_points(circle other){
         assert(intersects(other));
         double d = dist(c, other.c);
         double u = acos((other.r*other.r + d*d - r*r)/(2*other.r*d));
@@ -52,12 +52,12 @@ struct circle{
 
 ### Descrição
 
-- insideCircle: Retorna 0 caso o ponto esteja dentro, 1 caso esteja na borda e 2 caso esteja fora do círculo
-- circumcircle: Círculo circunscrito no triângulo
-- incircle: Círculo inscrito do triângulo
+- **(double)** inside_circle: Retorna 0 caso o ponto esteja dentro, 1 caso esteja na borda e 2 caso esteja fora do círculo
+- **(double)** circumcircle: Círculo circunscrito no triângulo
+- **(double)** incircle: Círculo inscrito do triângulo
 
 ```c++
-int insideCircle(point p, circle c) {
+int inside_circle(point p, circle c) {
     if (fabs(dist(p, c.c) - c.r)<EPS) return 1;
     else if(dist(p, c.c) < c.r) return 0;
     else return 2;

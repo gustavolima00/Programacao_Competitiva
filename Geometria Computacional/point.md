@@ -41,7 +41,7 @@ struct point{
     double norm() { return hypot(x, y); }
     point normalized(){ return point(x, y)*(1.0/norm()); }
     double angle() { return atan2(y, x); }
-    double polarAngle(){
+    double polar_angle(){
         double a = atan2(y, x);
         return a < 0 ? a + 2*PI : a; 
     }
@@ -61,11 +61,12 @@ struct point{
 - **(double/int)** collinear: Teste de colinearidade entre os pontos
 - **(double)** rotate: Rotação do ponto em relação a origem
 - **(double)** angle: Angulo formado entre vetores a e b com o de origem
+- **(double)** proj: Projeção de u sobre v
 - **(double/int)** between: Verifica se o ponto q está dentro no segmento p r 
-- **(double)** lineIntersectSeg: Retorna ponto formado pela intersecção das retas a b e A B
+- **(double)** line_intersect: Retorna ponto formado pela intersecção das retas p q e A B **Se as retas forem coolineares c é zero e a função retorna nan**
 - **(double/int)** parallel: Teste de paralelidade
-- **(double)** segIntersects: Verifica se segmentos a b e p q se interceptam
-- **(double)** closetToSegment: Ponto mais próximo entre p e o segmento de reta a b
+- **(double)** seg_intersects: Verifica se segmentos a b e p q se interceptam
+- **(double)** closet_point: Ponto mais próximo entre p e o segmento de reta a b
 ```c++
 double dist(point p1, point p2){
     return hypot(p1.x-p2.x, p1.y-p2.y);
@@ -89,10 +90,13 @@ point rotate(point p, double rad){
 double angle(point a, point o, point b){
     return acos(inner(a-o, b-o)/(dist(o, a)*dist(o,b)));
 }
+point proj(point u, point v){
+    return v*(inner(u, v)/inner(v, v));
+}
 bool between(point p, point q, point r){
     return collinear(p, q, r) && inner(p-q, r-q)<=0;
 }
-point lineIntersectSeg(point p, point q, point A, point B){
+point line_intersect(point p, point q, point A, point B){
     double c = cross(A-B, p-q);
     double a = cross(A, B);
     double b = cross(p, q);
@@ -101,20 +105,19 @@ point lineIntersectSeg(point p, point q, point A, point B){
 bool parallel(point a, point b){
     return fabs(cross(a, b))<EPS;
 }
-bool segIntersects(point a, point b, point p, point q){
+bool seg_intersects(point a, point b, point p, point q){
     if(parallel(a-b, p-q)){
         return between(a, p, q) || between(a, q, b) ||
                 between(p, a, q) || between(p, b, q);
     }
-    point i = lineIntersectSeg(a, b, p, q);
+    point i = line_intersect(a, b, p, q);
     return between(a, i, b) && between(p, i, q);
 }
-point closetToSegment(point p, point a, point b){
+point closet_point(point p, point a, point b){
     double u = inner(p-a, b-a)/inner(b-a, b-a);
     if(u < 0.0) return a;
     if(u > 1.0) return b;
     return a+((b-a)*u);
 }
 ```
-
 <div style="page-break-after: always;"></div>

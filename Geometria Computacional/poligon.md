@@ -4,19 +4,19 @@ O polígono é representado por um vetor de pontos portanto não tem estrutura.
 
 ## Funções
 ### Descrição
-- **(double/int)** signedArea: Retorna área do polígono (Pode dar valor negativo)
+- **(double/int)** signed_area: Retorna área do polígono (Pode dar valor negativo)
 - **(double/int)** area: Retorna área positiva do polígono
-- **(double/int)** leftmostIndex: Índice do ponto mais a esquerda
+- **(double/int)** left_index: Índice do ponto mais a esquerda
 - **(double/int)** make_polygon: Coloca o índice do ponto mais a esquerda como 0 (Necessário para as funções que chamam polygon)
 - **(double)** perimeter: Calcula o perímetro do polígono
-- **(double/int)** isConvex: Verifica se polígono é convexo
-- **(double)** inPolytgon: Verifica se um ponto está no polígono
-- **(double)** cutPolygon: Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
+- **(double/int)** is_convex: Verifica se polígono é convexo
+- **(double)** in_polytgon: Verifica se um ponto está no polígono
+- **(double)** cut_polygon: Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
 ```c++
 using polygon = vector<point>;
 const double PI = acos(-1);
 
-double signedArea(polygon &P){
+double signed_area(polygon &P){
     double result = 0.0;
     int n = P.size();
     for(int i=0; i<n; i++){
@@ -25,9 +25,9 @@ double signedArea(polygon &P){
     return result/2.0;
 }
 double area(polygon &P){
-    return fabs(signedArea(P));
+    return fabs(signed_area(P));
 }
-int leftmostIndex(vector<point>& P){
+int left_index(vector<point>& P){
     int ans = 0;
     for(int i=1; i<int(P.size()); i++){
         if (P[i]<P[ans]) ans = i;
@@ -35,10 +35,10 @@ int leftmostIndex(vector<point>& P){
     return ans;
 }
 polygon make_polygon(vector<point> P){
-    if(signedArea(P)<0.0) 
+    if(signed_area(P)<0.0) 
         reverse(P.begin(), P.end());
 
-    int li = leftmostIndex(P);
+    int li = left_index(P);
     rotate(P.begin(), P.begin()+li, P.end());
     return P;
 }
@@ -48,7 +48,7 @@ double perimeter(polygon &P){
     for(int i=0; i<n; i++) result+=dist(P[i], P[(i+1)%n]);
     return result; 
 }
-bool isConvex(polygon& P){
+bool is_convex(polygon& P){
     int n = P.size();
     if( n<3 ) return false;
     bool left = ccw(P[0], P[1], P[2]);
@@ -58,7 +58,7 @@ bool isConvex(polygon& P){
     }
     return true;
 }
-bool inPolytgon(polygon &P, point p){
+bool in_polytgon(polygon &P, point p){
     if (P.size() == 0u) return false;
     double sum = 0.0;
     int n = P.size();
@@ -72,7 +72,7 @@ bool inPolytgon(polygon &P, point p){
     }
     return fabs(fabs(sum)-2*PI) < EPS; 
 }
-polygon cutPolygon(polygon &P, point a, point b){
+polygon cut_polygon(polygon &P, point a, point b){
     vector<point> R;
     double left1, left2;
     int n = P.size();
@@ -81,7 +81,7 @@ polygon cutPolygon(polygon &P, point a, point b){
         left2 = cross(b-a, P[(i+1)%n]-a);
         if (left1 > -EPS) R.push_back(P[i]);
         if (left1 * left2 < -EPS)
-            R.push_back(lineIntersectSeg(P[i], P[(i+1)%n], a, b));
+            R.push_back(line_intersect(P[i], P[(i+1)%n], a, b));
     }
     return make_polygon(R);
 }
@@ -96,19 +96,19 @@ Dado um conjunto de pontos retorna o polígono que contém todos os pontos em O(
 ```c++
 point pivot(0, 0);
 
-bool angleCmp(point a, point b){
+bool angle_cmp(point a, point b){
     if(collinear(pivot, a, b))
         return inner(pivot-a, pivot-a) < inner(pivot-b, pivot-b);
     return cross(a-pivot, b-pivot) >=0;
 }
 
-polygon convexHull(vector<point> P){
+polygon convex_hull(vector<point> P){
     int i, j, n = P.size();
     if( n<=2 ) return P;
-    int P0 = leftmostIndex(P);
+    int P0 = left_index(P);
     swap(P[0], P[P0]);
     pivot = P[0];
-    sort(++P.begin(), P.end(), angleCmp);
+    sort(++P.begin(), P.end(), angle_cmp);
     vector<point> S;
     S.push_back(P[n-1]);
     S.push_back(P[0]);
@@ -137,7 +137,7 @@ polygon convexHull(vector<point> P){
 ```c++
 using polygon = vector<point>;
 
-polygon monotone_chain(const vector<point> points){
+polygon convex_hull(const vector<point> points){
     vector<point> P(points);
     sort(P.begin(), P.end());
     vector<point> lower, upper;
