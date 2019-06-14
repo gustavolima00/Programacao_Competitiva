@@ -140,7 +140,7 @@ O polígono é representado por um vetor de pontos portanto não tem estrutura.
 - **(double/int)** make_polygon: Coloca o índice do ponto mais a esquerda como 0 (Necessário para as funções que chamam polygon)
 - **(double)** perimeter: Calcula o perímetro do polígono
 - **(double/int)** is_convex: Verifica se polígono é convexo
-- **(double)** in_polytgon: Verifica se um ponto está no polígono
+- **(double)** in_polygon: Verifica se um ponto está no polígono
 - **(double)** cut_polygon: Polígono a direita que é formado pelo corte do polígono P pela reta formada pelos pontos a e b
 ```c++
 using polygon = vector<point>;
@@ -189,7 +189,7 @@ bool is_convex(polygon& P){
     }
     return true;
 }
-bool in_polytgon(polygon &P, point p){
+bool in_polygon(polygon &P, point p){
     if (P.size() == 0u) return false;
     double sum = 0.0;
     int n = P.size();
