@@ -1,7 +1,3 @@
-<div  style="font-size: 34px">
-Estrutura de dados
-</div>
-
 # Fenwick Tree
 Todas as implementações abaixo são indexadas em 1 portanto **não deve ser feito a consulta do índice 1**
 
@@ -191,4 +187,3 @@ public:
 };
 ```
 <div style="page-break-after: always;"></div>
-
