@@ -58,6 +58,8 @@ bool is_prime(ll n){
 - mod_inv: Calcula inverso modular de a em módulo m complexidade:**O(log a+b)**
 - mod_exp: Calcula a elevado à b em módulo m em complexidade:**O(log b)**
 - mod_mul: Calcula (a*b)%m sem overflow em complexidade:**O(log a + log b)**
+- diophantine: Acha uma solução na equação no formato ax+by=c, sendo x e y as incognitas; Após a divisão de a, b e c pelo mdc(a, b) as outras soluções são x=x0+bt, y=y0-at; complexidade:**O(log a + log b)**
+- preprocess_fat: Pré-processa os fatorias em módulo m até MAXN em complexidade **O(MAXN)**
 ```c++
 using ll = long long;
 template<typename T>
@@ -108,6 +110,11 @@ T mod_exp(T a, T b, T m){
     c = (c*c)%m;
     if(b%2 != 0) c=(c*a)%m;
     return c;
+}
+template<typename T>
+void diophantine(T a, T b, T c, T& x, T& y){
+    T d = ext_gcd(a, b, x, y);
+    x *= x/d; y*= c/d;
 }
 #define MAXN 1000009
 using ll = long long;
