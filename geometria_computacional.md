@@ -422,7 +422,7 @@ struct triangle{
     circle circum_circle(){
         return circumcircle(a, b, c);
     }
-    bool is_inside(point p){
+    int is_inside(point p){
         double u = cross(b-a, p-a)*cross(b-a, c-a);
         double v = cross(c-b, p-b)*cross(c-b, a-b);
         double w = cross(a-c, p-c)*cross(a-c, b-c);
