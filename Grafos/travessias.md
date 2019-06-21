@@ -16,7 +16,7 @@ void dfs(int u){
         }
     }
 }
-int dist[MAX];
+int dist[MAXN];
 void bfs(int u){
     queue<int> q;
     q.push(u);
@@ -26,10 +26,10 @@ void bfs(int u){
         auto x = q.front();
         q.pop();
         for(auto v:adj_lis[x]){
-            if(visited[y]) continue;
+            if(visited[v]) continue;
             
             visited[v]=true;
-            dist[v] = dist[u]+1;
+            dist[v] = dist[x]+1;
             q.push(v);
         }
     }

@@ -1,6 +1,7 @@
 <div  style="font-size: 34px">
 Grafos
 </div>
+
 # Travessias
 ## Descrissão
 - dfs: (Depth-First Search) Travessia por profundidade complexidade **O(N)** sendo N o número de arestas do vértice u
@@ -19,7 +20,7 @@ void dfs(int u){
         }
     }
 }
-int dist[MAX];
+int dist[MAXN];
 void bfs(int u){
     queue<int> q;
     q.push(u);
@@ -28,11 +29,11 @@ void bfs(int u){
     while(not q.empty()){
         auto x = q.front();
         q.pop();
-        for(auto v:adj_lis[x]){
-            if(visited[y]) continue;
+        for(auto v:adj_list[x]){
+            if(visited[v]) continue;
             
             visited[v]=true;
-            dist[v] = dist[u]+1;
+            dist[v] = dist[x]+1;
             q.push(v);
         }
     }
