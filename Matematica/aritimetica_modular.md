@@ -64,7 +64,7 @@ T mod_exp(T a, T b, T m){
 template<typename T>
 void diophantine(T a, T b, T c, T& x, T& y){
     T d = ext_gcd(a, b, x, y);
-    x *= x/d; y*= c/d;
+    x *= c/d; y*= c/d;
 }
 #define MAXN 1000009
 using ll = long long;
