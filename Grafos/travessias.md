@@ -21,7 +21,7 @@ void bfs(int u){
     queue<int> q;
     q.push(u);
     visited[u]=true;
-    dist[u]=0;
+    memset(&dist, 0, sizeof dist);
     while(not q.empty()){
         auto x = q.front();
         q.pop();

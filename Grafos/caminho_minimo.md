@@ -1,46 +1,3 @@
-<div  style="font-size: 34px">
-Grafos
-</div>
-
-# Travessias
-## Descrissão
-- dfs: (Depth-First Search) Travessia por profundidade complexidade **O(N)** sendo N o número de arestas do vértice u
-- bfs: (Breadth-First Search) Travessia por largura; Armazena no vetor dist, a distância do vertive u para os demais vertice; o próprio vértice e vértices que não foram visitados tem distância 0; complexidade **O(N)** sendo N o número de arestas do vértice u
-
-```c++
-#define MAXN 1009
-bitset<MAXN> visited;
-vector<int> adj_list[MAXN];
-
-void dfs(int u){
-    visited[u]=true;
-    for(auto v:adj_list[u]){
-        if(not visited[v]){
-            dfs(v);
-        }
-    }
-}
-int dist[MAXN];
-void bfs(int u){
-    queue<int> q;
-    q.push(u);
-    visited[u]=true;
-    memset(&dist, 0, sizeof dist);
-    while(not q.empty()){
-        auto x = q.front();
-        q.pop();
-        for(auto v:adj_lis[x]){
-            if(visited[v]) continue;
-            
-            visited[v]=true;
-            dist[v] = dist[x]+1;
-            q.push(v);
-        }
-    }
-}
-```
-<div style="page-break-after: always;"></div>
-
 # Caminhos mínimos
 
 Calucla o caminho mínimo de **s para t** em um grafo com **n** arestas numeradas de **1 a n**. Armazena em **pred[x] a aresta antecessora a x**, desse modo pode-se recuperar o caminho mínimo.
@@ -86,8 +43,6 @@ int bellmanford(int s, int t, int n){
     return dist[t];
 }
 ```
-<div style="page-break-after: always;"></div>
-
 ## Shortest Path Faster Algorithm (SPFA)
 
 Otimização do algorítimo de Bellman-Ford. Retorna **-1 se o grafo tiver ciclo negativo.**.Complexidade média igual ao algorítimo de dijkstra, no pior caso **O(VE)**;
@@ -131,8 +86,6 @@ int spfa(int s, int t, int n){
 }
 
 ```
-
-<div style="page-break-after: always;"></div>
 
 ## Algoritmo de Dijkstra
 
