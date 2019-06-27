@@ -1,5 +1,7 @@
 # Programacao_Competitiva
 
+- [Conteúdo completo](conteudo_completo.md)
+[PDF](conteudo_completo.pdf)
 ## Tópicos
 - [1.Introdução](introducao.md)
 - [2.Matemática](matematica.md)

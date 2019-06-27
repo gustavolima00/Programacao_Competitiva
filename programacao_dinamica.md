@@ -1,4 +1,6 @@
-# Programação dinâmica
+<div  style="font-size: 34px">
+Programação dinâmica
+</div>
 
 ## Knapsack
 
@@ -23,3 +25,5 @@ int knapSack(int w, int wt[], int val[], int n){
     return mt[n][w];
 }
 ```
+
+<div style="page-break-after: always;"></div>

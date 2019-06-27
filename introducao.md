@@ -1,4 +1,6 @@
-# Introdução
+<div  style="font-size: 34px">
+Introdução
+</div>
 
 ## Template
 
@@ -25,3 +27,5 @@ int main(){
 
 }
 ```
+
+<div style="page-break-after: always;"></div>
