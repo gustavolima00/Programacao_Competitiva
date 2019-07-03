@@ -86,8 +86,6 @@ int bellmanford(int s, int t, int n){
     return dist[t];
 }
 ```
-<div style="page-break-after: always;"></div>
-
 ## Shortest Path Faster Algorithm (SPFA)
 
 Otimização do algorítimo de Bellman-Ford. Retorna **-1 se o grafo tiver ciclo negativo.**.Complexidade média igual ao algorítimo de dijkstra, no pior caso **O(VE)**;
@@ -132,8 +130,6 @@ int spfa(int s, int t, int n){
 
 ```
 
-<div style="page-break-after: always;"></div>
-
 ## Algoritmo de Dijkstra
 
 Tem complexidade melhor que os outros algorítimos porém, **assume que o grafo não contém ciclo negativo**, essa implementação aceita arestas negativas; Complexidade **O(V log V + E)**
@@ -170,5 +166,46 @@ int dijkstra(int s, int t, int n){
         }
         return dist[t];
 }
+```
+
+## Algoritmo de Floyd-Warshall
+
+Calcula todos os caminhos mínimos do grafo em uma matriz de adjacencias; **Para a ultilização do algorítimo é necessário inicializar os vértices inexistentes com infinito**; **Complexidade O(V³)**
+
+```c++
+#define MAXN 409
+int dist[MAXN][MAXN];
+int pred[MAXN][MAXN];
+
+void floyd_warshall(int n){
+    for(int u=1; u<=n; ++u)
+        pred[u][u] = u;
+    for(int k=1; k<=n; ++k){
+        for(int u=1; u<=n; ++u){
+            for(int v=1; v<=n; ++v){
+                if(dist[u][v]>dist[u][k]+dist[k][v]){
+                    dist[u][v] = dist[u][k] + dist[k][v];
+                    pred[u][v] = pred[k][v];
+                }
+            }
+        }
+    }
+}
+
+```
+### Algorítimo sem recuperação do caminho mínimo
+
+```c++
+#define MAXN 409
+int dist[MAXN][MAXN];
+
+void floyd_warshall(int n){
+    for(int k=1; k<=n; ++k)
+        for(int u=1; u<=n; ++u)
+            for(int v=1; v<=n; ++v)
+                    dist[u][v] = min(dist[u][v], 
+                                    dist[u][k] + dist[k][v]);
+}
+
 ```
 <div style="page-break-after: always;"></div>
