@@ -22,8 +22,7 @@ struct point{
     point(){ x=y=0.0; };
 
     bool operator <( point other ) const {
-        if(fabs( x-other.x )>EPS) return x<other.x;
-        else return y < other.y;
+        return fabs(x-other.x)<EPS ? y<other.y : x<other.x;
     }
     bool operator ==(point other) const {  
         return fabs(x-other.x) < EPS && fabs(y-other.y)<EPS;
@@ -62,7 +61,7 @@ struct point{
 - **(double)** rotate: Rotação do ponto em relação a origem
 - **(double)** angle: Angulo formado entre vetores a e b com o de origem
 - **(double)** proj: Projeção de u sobre v
-- **(double/int)** between: Verifica se o ponto q está dentro no segmento p r 
+- **(double/int)** between: Verifica se o ponto q está dentro no segmento p r incluindo as bordas; Para desconsiderar as bordas basta mudar inn<=0 para inn<0
 - **(double)** line_intersect: Retorna ponto formado pela intersecção das retas p q e A B **Se as retas forem coolineares c é zero e a função retorna nan**
 - **(double/int)** parallel: Teste de paralelidade
 - **(double)** seg_intersects: Verifica se segmentos a b e p q se interceptam
@@ -78,23 +77,36 @@ double cross(point p1, point p2){
     return p1.x*p2.y-p1.y*p2.x;
 }
 bool ccw(point p, point q, point r){
-    return cross(q-p, r-p)>0;
+    point k1=q-p, k2=r-p;
+    double d = k1.x*k2.y-k1.y*k2.x;
+    return d>0;
 }
 bool collinear(point p, point q, point r){
-    return fabs(cross(q-p, r-p))<EPS;
+    point k1=q-p, k2=r-p;
+    double d = k1.x*k2.y-k1.y*k2.x;
+    return fabs(d)<EPS;
 }
 point rotate(point p, double rad){
     return point(p.x*cos(rad)-p.y*sin(rad), 
                  p.x*sin(rad)+p.y*cos(rad));
 }
 double angle(point a, point o, point b){
-    return acos(inner(a-o, b-o)/(dist(o, a)*dist(o,b)));
+    double den = hypot(o.x-a.x, o.y-a.y)*hypot(o.x-b.x, o.y-b.y);
+    point k1=a-o, k2=b-o;
+    double num = k1.x*k2.x+k1.y*k2.y;
+    return acos(num/den);
 }
 point proj(point u, point v){
-    return v*(inner(u, v)/inner(v, v));
+    double num = u.x*v.x+u.y*v.y;
+    double den = v.x*v.x+v.y*v.y;
+    return v*(num/den);
 }
 bool between(point p, point q, point r){
-    return collinear(p, q, r) && inner(p-q, r-q)<=0;
+    point k1=q-p, k2=r-p;
+    double col = k1.x*k2.y-k1.y*k2.x;
+    k1=p-q, k2=r-q;
+    double inn = k1.x*k2.x+k1.y*k2.y;
+    return fabs(col)<EPS && inn<=0;
 }
 point line_intersect(point p, point q, point A, point B){
     double c = cross(A-B, p-q);
@@ -103,18 +115,23 @@ point line_intersect(point p, point q, point A, point B){
     return ( (p-q)*(a/c) ) - ( (A-B)*(b/c) );
 }
 bool parallel(point a, point b){
-    return fabs(cross(a, b))<EPS;
+    double c = a.x*b.y-a.y*b.x;
+    return fabs(c)<EPS;
 }
 bool seg_intersects(point a, point b, point p, point q){
     if(parallel(a-b, p-q)){
-        return between(a, p, q) || between(a, q, b) ||
+        return between(a, p, b) || between(a, q, b) ||
                 between(p, a, q) || between(p, b, q);
     }
     point i = line_intersect(a, b, p, q);
     return between(a, i, b) && between(p, i, q);
 }
 point closet_point(point p, point a, point b){
-    double u = inner(p-a, b-a)/inner(b-a, b-a);
+    if(a==b) return a;
+    point k1=p-a, k2=b-a;
+    double num = k1.x*k2.x+k1.y*k2.y;
+    double dem = k2.x*k2.x+k2.y*k2.y;
+    double u = num/dem;
     if(u < 0.0) return a;
     if(u > 1.0) return b;
     return a+((b-a)*u);

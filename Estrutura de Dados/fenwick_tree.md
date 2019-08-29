@@ -1,38 +1,28 @@
 # Fenwick Tree
-Todas as implementações abaixo são indexadas em 1 portanto **não deve ser feito a consulta do índice 1**
+Todas as implementações abaixo são indexadas em 1 portanto **não deve ser feito a consulta do índice 0**
 
 ## Range Sum Query em O(log n) e atualização com soma pontual
 
 ```c++
+const int neutral = 0;
+#define comp(a, b) ((a)+(b))
 class BITree {
 private:
-    vector<long long> ts;
-    size_t N;
-
-    int LSB(int n) { return n&(-n); }
-
-    long long RSQ(int i){
-        long long sum = 0;
-
-        while(i>=1){
-            sum+=ts[i];
-            i-=LSB(i);
-        }
+    vector<int> ft;
+public:
+    BITree(int n) { ft.assign(n+1, 0); }
+    int rsq(int i){
+        int sum = neutral;
+        for(; i; i-= (i&-i))
+            sum = comp(sum, ft[i]);
         return sum;
     }
-public:
-    BITree(size_t n) : ts(n+1, 0), N(n) {};
-
-    long long RSQ(int i, int j){
-        return RSQ(j) - RSQ(i-1);
+    int rsq(int i, int j){
+        return rsq(j)-rsq(i-1);
     }
-
-    void add(size_t i, const long long& x){
-        if(i==0) return;
-        while(i<=N){
-            ts[i]+=x;
-            i+=LSB(i);
-        }
+    void update(int i, int v){
+        for(; i<(int) ft.size(); i+= (i&-i))
+            ft[i] = comp(v, ft[i]);
     }
 };
 ```

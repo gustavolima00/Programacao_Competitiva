@@ -43,7 +43,7 @@ void bfs(int u){
 
 # Caminhos mínimos
 
-Calucla o caminho mínimo de **s para t** em um grafo com **n** arestas numeradas de **1 a n**. Armazena em **pred[x] a aresta antecessora a x**, desse modo pode-se recuperar o caminho mínimo.
+Calucla o caminho mínimo de **s para t** em um grafo com **n** arestas numeradas de **1 a n**. Armazena em **pred a aresta antecessora a x**, desse modo pode-se recuperar o caminho mínimo.
 
 ```c++
 //Macros
@@ -86,6 +86,8 @@ int bellmanford(int s, int t, int n){
     return dist[t];
 }
 ```
+<div style="page-break-after: always;"></div>
+
 ## Shortest Path Faster Algorithm (SPFA)
 
 Otimização do algorítimo de Bellman-Ford. Retorna **-1 se o grafo tiver ciclo negativo.**.Complexidade média igual ao algorítimo de dijkstra, no pior caso **O(VE)**;
@@ -129,6 +131,7 @@ int spfa(int s, int t, int n){
 }
 
 ```
+<div style="page-break-after: always;"></div>
 
 ## Algoritmo de Dijkstra
 
@@ -167,6 +170,7 @@ int dijkstra(int s, int t, int n){
         return dist[t];
 }
 ```
+<div style="page-break-after: always;"></div>
 
 ## Algoritmo de Floyd-Warshall
 
