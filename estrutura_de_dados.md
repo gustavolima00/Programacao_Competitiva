@@ -222,3 +222,114 @@ public:
 };
 ```
 <div style="page-break-after: always;"></div>
+
+## SegmentTree com Lazy Propagation
+
+```c++
+const int neutral = -1e9;
+#define comp(a, b) max((a), (b))
+ 
+class SegmentTree {
+private:
+	vector<int> st, lazy;
+	int size;
+#define left(p) (p<<1)
+#define right(p) ((p<<1) + 1) 
+	void build(int p, int l, int r, int* A){
+		if(l == r) { st[p] = A[l]; return; }
+		int m = (l + r)/2;
+		build(left(p), l, m, A);
+		build(right(p), m+1, r, A);
+		st[p] = comp(st[left(p)], st[right(p)]);
+	}
+	void push(int p, int l, int r){
+		//st[p] += (r-l+1)*lazy[p]; // Caso RSQ
+		st[p] += lazy[p]; // Caso RMQ
+		if(l != r){
+			lazy[right(p)] += lazy[p];
+			lazy[left(p)] += lazy[p];
+		}
+		lazy[p] = 0;
+	}
+	void update(int p, int l, int r, int a, int b, int k){
+		push(p, l, r);
+		if(a>r || b<l) return;
+		else if(l>=a && r<=b){
+			lazy[p] = k;  push(p, l, r); return;
+		}
+		update(left(p), l, (l + r) / 2, a, b, k);
+		update(right(p), (l + r) / 2 + 1, r, a, b, k); 
+		st[p] = comp(st[left(p)], st[right(p)]);
+	}
+	int query(int p, int l, int r, int a, int b){
+		push(p, l, r);
+		if(a > r || b < l) return neutral;
+		if(l >= a && r <= b) return st[p];
+		int m = (l + r)/2;
+		int p1 = query(left(p), l, m, a, b);
+		int p2 = query(right(p), m+1, r, a, b);
+		return comp(p1, p2);
+	}
+public:
+	SegmentTree(int* bg, int* en){
+		size = (int)(en - bg);
+		st.assign(4*size, neutral);
+		lazy.assign(4*size, 0);
+		build(1, 0, size-1, bg);
+	}
+	int query(int a, int b){
+		return query(1, 0, size-1, a, b);
+	}
+	void update(int a, int b, int k){
+		return update(1, 0, size-1, a, b, k);
+	}
+};
+```
+
+<div style="page-break-after: always;"></div>
+
+## SparseTable
+
+Construção em O(N log N) consulta em O(1)
+
+```c++
+#define comp(a, b) min((a), (b))
+int st[MAXN][MAXLOGN];
+ 
+void init(int* bg, int*en){
+	int sz = int(en-bg);
+	for(int i=0; i<sz; ++i) st[i][0] = bg[i];
+	for(int j=1; 1 << j <= sz; ++j)
+		for(int i=0; i + (1<<j) <= sz; ++i)
+			st[i][j] = comp(st[i][j-1], st[i + (1<<(j-1))][j-1]);
+}
+int query(int l, int r){
+	int k = (int) floor(log((double)r-l+1) / log(2.0));
+	return comp(st[l][k], st[r-(1<<k)+1][k]);
+}
+```
+
+## Union Find (DSU)
+
+Construção em O(N) find em ~O(1)
+```c++
+#define MAXN 300010
+int p[MAXN];
+int tam[MAXN];
+
+void init(){
+	memset(tam, 0, sizeof tam);
+	for(int i=0; i<MAXN; ++i) p[i] = i;
+}
+int find(int i){
+	return p[i]==i ? i : p[i] = find(p[i]);
+}
+void join(int i, int j){
+	int x = find(i), y = find(j);
+	if(x!=y){
+		if(tam[x]>tam[y]) swap(x, y);
+		p[x] = y;
+		tam[y]+=tam[x];
+	}
+}
+```
