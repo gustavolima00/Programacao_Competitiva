@@ -142,21 +142,18 @@ Tem complexidade melhor que os outros algorítimos porém, **assume que o grafo 
 vector<ii> adj_list[MAXN];
 int dist[MAXN];
 int pred[MAXN];
-bitset<MAXN> visited;
 
 int dijkstra(int s, int t, int n){
         for(int i=1; i<=n; ++i){
                 dist[i]=INF;
                 pred[i]=-1;
         }
-        visited.reset();
         dist[s]=0; pred[s]=s;
         set<ii> pq;
         pq.insert(ii(0, s));
         while(not pq.empty()){
                 auto u = pq.begin()->second;
                 pq.erase(pq.begin());
-                if(visited[u]) continue;
                 for(auto x:adj_list[u]){
                         auto v=x.ff, w=x.ss;
                         if(dist[v]>dist[u]+w){
@@ -196,6 +193,17 @@ void floyd_warshall(int n){
     }
 }
 
+vector<int> get_path(int u, int v){
+    vector<int> path;
+    auto p = v;
+    while(p!=u){
+        path.push_back(p);
+        p = pred[u][p];
+    }
+    path.push_back(u);
+    reverse(path.begin(), path.end());
+    return path;
+}
 ```
 ### Algorítimo sem recuperação do caminho mínimo
 
