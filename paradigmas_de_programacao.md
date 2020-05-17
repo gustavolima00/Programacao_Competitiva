@@ -75,14 +75,14 @@ int t_search(int l, int r){
 Calcula a maior subsequencia crescente, para achar a maior sequencia não decrescente basta alterar o lower_bound para upper_bound. Complexidade N*log(N)
 
 ```c++
-multiset<int> lis(vector<int> vs){
+int lis(vector<int> vs){
     multiset<int> st;
     for(auto x:vs){
         auto it = st.lower_bound(x);
         if(it!=st.end()) st.erase(it);
         st.insert(x);
     }
-    return st;
+    return st.size();
 }
 
 ```

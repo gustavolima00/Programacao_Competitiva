@@ -2,13 +2,17 @@
 Matemática
 </div>
 
-# Números prímos
+# Primos e divisores
 
 ## Descrição 
 
 - sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( n log log n)**;
 - is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√n/log n)**
 - is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√n)**
+- gdc: Calcula maior divisor comum em complexidade **O(log a + log b)**
+- lmc: Calcula o menor múltiplo comum em complexidade **O(log a + log b)**
+- num_div: Calcula o números de divisores de N em complexidade **O(√n)**
+
 ```c++
 using ll = long long;
 const long long MAX = 10000009;
@@ -45,84 +49,88 @@ bool is_prime(ll n){
     }
     return true;
 }
+
+int gcd(int a, int b){
+    return b==0 ? a : gcd(b, a%b);
+}
+int lmc(int a, int b){
+    return a*(b/gcd(a, b));
+}
+int num_div(int n){
+    int ans=0;
+    for(int i=1; i*i<=n; ++i)
+        if(n%i == 0)
+            ans+=( i==n/i ? 1 : 2);
+    return ans;
+}
 ```
+
 <div style="page-break-after: always;"></div>
 
 # Aritimética modular
 
-## Descrição 
-- gdc: Calcula maior divisor comum em complexidade **O(log a + log b)**
-- lmc: Calcula o menor múltiplo comum em complexidade **O(log a + log b)**
+## Descrição
 - ext_gcd: Algorítimo estendido de euclides complexidade:**O(log a + log b)**
-- num_div: Calcula o números de divisores de N em complexidade **O(√n)**
 - mod_inv: Calcula inverso modular de a em módulo m complexidade:**O(log a+b)**
 - mod_exp: Calcula a elevado à b em módulo m em complexidade:**O(log b)**
 - mod_mul: Calcula (a*b)%m sem overflow em complexidade:**O(log a + log b)**
 - diophantine: Acha uma solução na equação no formato ax+by=c, sendo x e y as incognitas; Após a divisão de a, b e c pelo mdc(a, b) as outras soluções são x=x0+bt, y=y0-at; complexidade:**O(log a + log b)**
 - preprocess_fat: Pré-processa os fatorias em módulo m até MAXN em complexidade **O(MAXN)**
+
+É necessário definir a variável **mod** globalmente 
+Se necessário use a macro
+
 ```c++
-using ll = long long;
-template<typename T>
-T gcd(T a, T b){
-    return b==0 ? a : gcd(b, a%b);
+#define int long long
+
+int32_t main(){
+
 }
-template<typename T>
-T lmc(T a, T b){
-    return a*(b/gcd(a, b));
-}
-template<typename T>
-T ext_gcd(T a, T b, T& x, T& y){
+```
+
+```c++
+int mod = 1e9+7;
+
+int ext_gcd(int a, int b, int& x, int& y){
     if(b==0){
         x=1; y=0; return a;
     }
     else{
-        T g = ext_gcd(b, a%b, y, x);
+        int g = ext_gcd(b, a%b, y, x);
         y-=a/b*x; return g;
     }
 }
-template<typename T>
-T num_div(T n){
-    T ans=0;
-    for(T i=1; i*i<=n; ++i)
-        if(n%i == 0)
-            ans+=( i==n/i ? 1 : 2);
-    return ans;
+int mod_inv(int a){
+    int x, y;
+    ext_gcd(a, mod, x, y);
+    return (x%mod+mod)%mod;
 }
-template<typename T>
-T mod_inv(T a, T m){
-    T x, y;
-    ext_gcd(a, m, x, y);
-    return (x%m+m)%m;
-}
-template<typename T>
-T mod_mul(T a, T b, T m){
-    T x=0, y=a%m;
+int mod_mul(int a, int b){
+    int x=0, y=a%mod;
     while(b>0){
-        if(b%2==1) x=(x+y)%m;
-        y=(y*2)%m; b/=2;
+        if(b%2==1) x=(x+y)%mod;
+        y=(y*2)%mod; b/=2;
     }
-    return x%m;
+    return x%mod;
 }
-template<typename T>
-T mod_exp(T a, T b, T m){
-    if(b == 0) return (T) 1;
-    T c = mod_exp(a, b/2, m);
-    c = (c*c)%m;
-    if(b%2 != 0) c=(c*a)%m;
+int mod_exp(int a, int b){
+    if(b == 0) return 1;
+    int c = mod_exp(a, b/2);
+    c = (c*c)%mod;
+    if(b%2 != 0) c=(c*a)%mod;
     return c;
 }
-template<typename T>
-void diophantine(T a, T b, T c, T& x, T& y){
-    T d = ext_gcd(a, b, x, y);
+void diophantine(int a, int b, int c, int& x, int& y){
+    int d = ext_gcd(a, b, x, y);
     x *= c/d; y*= c/d;
 }
+
 #define MAXN 1000009
-using ll = long long;
-ll fat[MAXN];
-void preprocess_fat(ll m){
+int fat[MAXN];
+void preprocess_fat(){
     fat[0] = 1;
-    for(ll i=1; i<MAXN; ++i)
-        fat[i]=(i*fat[i-1])%m;
+    for(int i=1; i<MAXN; ++i)
+        fat[i]=(i*fat[i-1])%mod;
 }
 ```
 <div style="page-break-after: always;"></div>
