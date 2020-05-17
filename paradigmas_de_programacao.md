@@ -52,3 +52,38 @@ pair<point, point> closet_pair(vector<point>& vs){
 }
 ```
 <div style="page-break-after: always;"></div>
+
+# Busca ternária 
+
+Calcula mínimo ou máximo de função em complexidade log(R-L), pode ser usada com **double**, basta alterar a condição do while para (r-l>EPS)
+
+```c++
+int f(int x){}
+
+int t_search(int l, int r){
+    while(r-l>2){
+        int k = (r-l)/3;
+        if(f(l+k)<f(r-k)) l = l+k; // Para achar um ponto de mínimo basta mudar a condição para >
+        else r = r-k;
+    }
+    return l+1;
+}
+```
+
+# LIS (Longest Incrising Subsequence)
+
+Calcula a maior subsequencia crescente, para achar a maior sequencia não decrescente basta alterar o lower_bound para upper_bound. Complexidade N*log(N)
+
+```c++
+multiset<int> lis(vector<int> vs){
+    multiset<int> st;
+    for(auto x:vs){
+        auto it = st.lower_bound(x);
+        if(it!=st.end()) st.erase(it);
+        st.insert(x);
+    }
+    return st;
+}
+
+```
+<div style="page-break-after: always;"></div>
