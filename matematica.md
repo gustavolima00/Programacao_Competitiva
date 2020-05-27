@@ -9,11 +9,14 @@ Matemática
 - sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( n log log n)**;
 - is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√n/log n)**
 - is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√n)**
+- get_pots: Retorna fatores primoes e suas respectivas potências
+- get_divs: Retorna os divisores de N com base nos seus fatores primos no vetor ans
 - gdc: Calcula maior divisor comum em complexidade **O(log a + log b)**
 - lmc: Calcula o menor múltiplo comum em complexidade **O(log a + log b)**
 - num_div: Calcula o números de divisores de N em complexidade **O(√n)**
 
 ```c++
+using ii = pair<int, int>;
 using ll = long long;
 const long long MAX = 10000009;
 ll sievesize;
@@ -48,6 +51,29 @@ bool is_prime(ll n){
         if( p+2<n and n%(p+2)==0 ) return false;
     }
     return true;
+}
+
+vector<ii> get_pots(int n){
+        vector<ii> res;
+        int i = 0, p = pr[i];
+        while(p*p<=n){
+                int q = 0;
+                while(n%pr[i] == 0) n/=pr[i], ++q;
+                if(q) res.emplace_back(p, q);
+                p = pr[++i];
+        }
+        if(n!=1) res.emplace_back(n, 1);
+        return res;
+}
+void get_divs(vector<ii>::iterator bg, vector<ii>::iterator en, vector<int>& ans, int num=1){
+        if(bg==en){
+                ans.push_back(num);
+        }
+        else{
+                get_divs(next(bg), en, ans, num);
+                for(int i=0; i<bg->second; ++i)
+                        num*=bg->first, get_divs(next(bg), en, ans, num);
+        }
 }
 
 int gcd(int a, int b){
