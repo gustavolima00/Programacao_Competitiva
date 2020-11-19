@@ -98,7 +98,7 @@ int num_div(int n){
 ## Descrição
 - ext_gcd: Algorítimo estendido de euclides complexidade:**O(log a + log b)**
 - mod_inv: Calcula inverso modular de a em módulo m complexidade:**O(log a+b)**
-- mod_exp: Calcula a elevado à b em módulo m em complexidade:**O(log b)**
+- mod_exp: Calcula a elevado à b em módulo m em complexidade:**O(log b)** Pode ser usado sem o segundo argumento para calcular o inverso de a se mod for primo
 - mod_mul: Calcula (a*b)%m sem overflow em complexidade:**O(log a + log b)**
 - diophantine: Acha uma solução na equação no formato ax+by=c, sendo x e y as incognitas; Após a divisão de a, b e c pelo mdc(a, b) as outras soluções são x=x0+bt, y=y0-at; complexidade:**O(log a + log b)**
 - preprocess_fat: Pré-processa os fatorias em módulo m até MAXN em complexidade **O(MAXN)**
@@ -139,7 +139,7 @@ int mod_mul(int a, int b){
     }
     return x%mod;
 }
-int mod_exp(int a, int b){
+int mod_exp(int a, int b=mod-2){
     if(b == 0) return 1;
     int c = mod_exp(a, b/2);
     c = (c*c)%mod;

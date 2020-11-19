@@ -318,8 +318,7 @@ int p[MAXN];
 int tam[MAXN];
 
 void init(){
-	memset(tam, 0, sizeof tam);
-	for(int i=0; i<MAXN; ++i) p[i] = i;
+	for(int i=0; i<MAXN; ++i) p[i] = i, tam[i]=1;
 }
 int find(int i){
 	return p[i]==i ? i : p[i] = find(p[i]);
