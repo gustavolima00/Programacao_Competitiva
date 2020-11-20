@@ -140,6 +140,16 @@ int mod_mul(int a, int b){
     return x%mod;
 }
 int mod_exp(int a, int b=mod-2){
+    int ans = 1;
+    while(b){
+        if (b&1) ans = ans*a%mod;
+        a = a*a%mod;
+        b = b/2;
+    }
+    return ans;
+}
+
+int mod_exp(int a, int b=mod-2){
     if(b == 0) return 1;
     int c = mod_exp(a, b/2);
     c = (c*c)%mod;
