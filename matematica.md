@@ -170,3 +170,54 @@ void preprocess_fat(){
 }
 ```
 <div style="page-break-after: always;"></div>
+
+<div style="page-break-after: always;"></div>
+
+# Transformada rápida de Fourier (FFT)
+
+## Descrição
+
+- fft: Transforma o vetor xs para o campo das frequências(invert=false) ou do tempo(invert=true) em complexidade: **O(N log N)** sendo N o tamanho do vetor
+- conv: Armazena em res a convolução dos polinômios a e b (multiplicação entre eles) em complexidade: **O(N log N)** sendo N o maior grau entre os 2 polinômios
+
+```c++
+#include <complex>
+using base = complex<double>;
+const double PI = acos(-1);
+
+void fft(vector<base>& a, bool invert){
+	int n = a.size();
+	if(n == 1) return;
+
+	vector<base> a0(n/2), a1(n/2);
+	for(int i=0; 2*i<n; ++i){
+		a0[i] = a[2*i];
+		a1[i] = a[2*i+1];
+	}
+	fft(a0, invert);
+	fft(a1, invert);
+
+	double ang = 2*PI/n*(invert ? -1:1);
+	base w{1}, wn{cos(ang), sin(ang)};
+	for(int i=0; 2*i<n; ++i){
+		a[i] = a0[i]+w*a1[i];
+		a[i+n/2] = a0[i]-w*a1[i];
+		if(invert){
+			a[i] /= 2;
+			a[i+n/2] /=2;
+		}
+		w *= wn;
+	}
+}
+
+void conv(vector<base> a, vector<base> b, vector<base> &res){
+	int n = 1;
+	while(n<(int)max(a.size(), b.size())) n <<= 1;
+	n <<= 1;
+	a.resize(n), b.resize(n);
+	fft(a, false); fft(b, false);
+	res.resize(n);
+	for(int i=0; i<n; ++i) res[i] = a[i]*b[i];
+	fft(res, true);
+}
+```
