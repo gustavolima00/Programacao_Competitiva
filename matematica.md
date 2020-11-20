@@ -142,8 +142,8 @@ int mod_mul(int a, int b){
 int mod_exp(int a, int b=mod-2){
     int ans = 1;
     while(b){
-        if (b&1) ans = ans*a%mod;
-        a = a*a%mod;
+        if (b&1) ans = (ans*a)%mod;
+        a = (a*a)%mod;
         b = b/2;
     }
     return ans;
