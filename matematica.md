@@ -25,7 +25,7 @@ void sieve(){
             lp[i] = i;
             pr.push_back (i);
         }
-        for (int j=0; j<(int)pr.size() && pr[j]<lp[i] && i*pr[j]<MAXN; ++j)
+        for (int j=0; j<(int)pr.size() && pr[j]<=lp[i] && i*pr[j]<MAXN; ++j)
             lp[i * pr[j]] = pr[j];
     }
 }
