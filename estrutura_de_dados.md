@@ -35,38 +35,33 @@ public:
 
 ## Range update em O(log n) query pontual
 
+Construção com todos os valores zerados indexada em 0.
+ 
 ```c++
-class BITree {
-        private:
-                vector<long long> ts;
-                size_t N;
-
-                int LSB(int n) { return n&(-n); }
-
-                void add(size_t i, ll x){
-                        while (i <= N) {
-                                ts[i] += x;
-                                i += LSB(i);
-                        }
-                }
-                long long RSQ(int i){
-                        long long sum = 0;
-
-                        while(i>=1){
-                                sum+=ts[i];
-                                i-=LSB(i);
-                        }
-                        return sum;
-                }
-        public:
-                BITree(size_t n) : ts(n+1, 0), N(n) {};
-
-                ll value_at(int i) { return RSQ(i); }
-
-                void range_add(size_t i, size_t j, long long x){
-                        add(i, x);
-                        add(j+1, -x);
-                }
+class BITree{
+private:
+	vector<ll> a;
+	int n;
+public:
+	BITree(int _n){
+		n = _n;
+		a.assign(n+2, 0);
+	}
+	ll at(int i) const {
+		ll sum = 0;
+		for(++i; i; i-=i&-i) sum += a[i];
+		return sum;
+	}
+	ll operator [](int i) const{
+		return at(i);
+	}
+	void add(int i, int j, ll x){
+		for(++i; i<=n; i+=i&-i) a[i] += x;
+		for(j+=2; j<=n; j+=j&-j) a[j] -= x;
+	}
+	void add(int i, ll x){
+		add(i, i, x);
+	}
 };
 ```
 <div style="page-break-after: always;"></div>
@@ -195,19 +190,16 @@ const int neutral = 0
 #define comp(a, b) ((a)+(b))
 
 class SegTree{
-    vi a; //using vi = vector<int>
+    vector<int> a;
     int n;
 public:
-    SegTree(vi st){
-        int sz = int(st.size());
+    SegTree(int _n){
+        int sz = _n;
         for(n = 1; n<sz; n<<=1 );
         a.assign(n<<1, neutral);
-        for(int i=0; i<sz; ++i) a[i+n] = st[i];
-        for(int i=n+sz-1; i>1; --i)
-            a[i>>1] = comp(a[i>>1], a[i]);
     }
     void update(int i, int x){
-        a[i+=n] = x; //substitui
+        a[i+=n] = x;
         for( i>>=1; i ; i>>=1)
             a[i] = comp(a[i<<1], a[1+(i<<1)]);
     }

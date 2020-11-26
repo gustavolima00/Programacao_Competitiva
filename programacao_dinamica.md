@@ -27,3 +27,14 @@ int knapSack(int w, int wt[], int val[], int n){
 ```
 
 <div style="page-break-after: always;"></div>
+
+
+## LIS 
+
+- Cáculculo da lis em complexidade **O(N log N)** 
+- A recuperação do caminho pode ser feita pelo array pred começando do pred com o maior valor de lis
+
+```c++
+
+
+```

@@ -6,11 +6,8 @@ Matemática
 
 ## Descrição 
 
-- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **n** e no bitset bs se o o numero é ou não primo. em complexidade **O( n log log n)**;
-- is_prime_sieve: Calcula um numero primo caso **sievesize** seja maior ou igual que √N em complexidade **O(√n/log n)**
-- is_prime: Calcula se um número é ou não primo de maneira rápida sem depender do crivo em complexidade **O(√n)**
+- sieve: Crivo de Eristótenes, armazena no vetor primes os primos até **MAXN** em complexidade **O(N)**;
 - get_pots: Retorna fatores primoes e suas respectivas potências
-- get_divs: Retorna os divisores de N com base nos seus fatores primos no vetor ans
 - gdc: Calcula maior divisor comum em complexidade **O(log a + log b)**
 - lmc: Calcula o menor múltiplo comum em complexidade **O(log a + log b)**
 - num_div: Calcula o números de divisores de N em complexidade **O(√n)**
@@ -18,39 +15,19 @@ Matemática
 ```c++
 using ii = pair<int, int>;
 using ll = long long;
-const long long MAX = 10000009;
-ll sievesize;
-bitset<MAX> bs;
-vector<ll> primes;
+#define MAXN 10000009
+int lp[N+1];
+vector<int> pr;
 
-void sieve(ll n){
-    sievesize = n+1;
-    bs.set();
-    bs[0]=bs[1]=0;
-    for(ll i=2; i<=sievesize; ++i){
-        if(bs[i]){
-            for(ll j=i*i; j<=sievesize; j+=i)
-                bs[j]=0;
-            primes.push_back(i);
+void sieve(){
+    for (int i=2; i<N; ++i) {
+        if (lp[i] == 0) {
+            lp[i] = i;
+            pr.push_back (i);
         }
+        for (int j=0; j<(int)pr.size() && pr[j]<lp[i] && i*pr[j]<N; ++j)
+            lp[i * pr[j]] = pr[j];
     }
-}
-bool is_prime_sieve(ll n){
-    if(n<=(ll)sievesize) return bs[n];
-    for(size_t i=0; i<primes.size() and primes[i]*primes[i]<=n; ++i)
-        if(n%primes[i] == 0) return false;
-    return true;
-}
-bool is_prime(ll n){
-    if(n<0) n=-n;
-    if(n<5 or n%2==0 or n%3==0)
-        return (n==2 or n==3);
-    ll maxP = sqrt(n)+2;
-    for(ll p=5; p<maxP; p+=6){
-        if( p<n and n%p==0 ) return false;
-        if( p+2<n and n%(p+2)==0 ) return false;
-    }
-    return true;
 }
 
 vector<ii> get_pots(int n){
@@ -64,16 +41,6 @@ vector<ii> get_pots(int n){
         }
         if(n!=1) res.emplace_back(n, 1);
         return res;
-}
-void get_divs(vector<ii>::iterator bg, vector<ii>::iterator en, vector<int>& ans, int num=1){
-        if(bg==en){
-                ans.push_back(num);
-        }
-        else{
-                get_divs(next(bg), en, ans, num);
-                for(int i=0; i<bg->second; ++i)
-                        num*=bg->first, get_divs(next(bg), en, ans, num);
-        }
 }
 
 int gcd(int a, int b){
