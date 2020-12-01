@@ -139,33 +139,32 @@ Tem complexidade melhor que os outros algorítimos porém, **assume que o grafo 
 
 ```c++
 #define MAXN 100009
-vector<ii> adj_list[MAXN];
+vector<ii> adj[MAXN];
 int dist[MAXN];
 int pred[MAXN];
 
-int dijkstra(int s, int t, int n){
-        for(int i=1; i<=n; ++i){
-                dist[i]=INF;
-                pred[i]=-1;
-        }
-        dist[s]=0; pred[s]=s;
-        set<ii> pq;
-        pq.insert(ii(0, s));
-        while(not pq.empty()){
-                auto u = pq.begin()->second;
-                pq.erase(pq.begin());
-                for(auto x:adj_list[u]){
-                        auto v=x.ff, w=x.ss;
-                        if(dist[v]>dist[u]+w){
-                                pq.erase(ii(dist[v], v));
-                                dist[v]=dist[u]+w;
-                                pred[v]=u;
-                                pq.insert(ii(dist[v], v));
-                        }
-                }
-        }
-        return dist[t];
+int djk(int s, int t){
+	memset(dist, 0x3f, sizeof dist);
+	memset(pred, -1, sizeof pred);
+    dist[s]=0; 
+    set<ii> pq;
+    pq.insert(ii(0, s));
+    while(not pq.empty()){
+            auto u = pq.begin()->second;
+            pq.erase(pq.begin());
+            for(auto x:adj[u]){
+                    auto v=x.ff, w=x.ss;
+                    if(dist[v]>dist[u]+w){
+                            pq.erase(ii(dist[v], v));
+                            dist[v]=dist[u]+w;
+                            pred[v]=u;
+                            pq.insert(ii(dist[v], v));
+                    }
+            }
+    }
+    return dist[t];
 }
+
 ```
 <div style="page-break-after: always;"></div>
 
