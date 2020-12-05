@@ -4,9 +4,9 @@ Programação dinâmica
 
 ## Coin change
 
-- Considerando $N$ como o número de moedas e **$N$** o valor do troco a dp retorna em complexidade **$O(N \times V)$** qual o número de maneiras possíveis de se entregar um troco de valor **$V$** com as **$N$** moedas disponíveis usando **$x$** moedas com **$x>=0$**
+- **dp**: Considerando **N** como o número de moedas e **N** o valor do troco a dp retorna em complexidade <img src="https://latex.codecogs.com/gif.latexs?O(N%20%5Ctimes%20V)"> qual o número de maneiras possíveis de se entregar um troco de valor **V** com as **N** moedas disponíveis usando **x** moedas com **x>=0**
 
-- É possível resolver o problema com um limite de moedas, sendo **lmt[i]** o número de modedas **i** disponíveis em complexidade **$O((N \times V$) + ($N \times 2 \times 2^N))$**
+- **solve**: É possível resolver o problema com um limite de moedas, sendo **lmt[i]** o número de modedas **i** disponíveis em complexidade <img src="https://latex.codecogs.com/gif.latexs?O((N%20%5Ctimes%20V)%20%2B%20(N%20%5Ctimes%202%5EN))">
 
 ```c++
 #define MAXN 5
