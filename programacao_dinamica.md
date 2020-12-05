@@ -4,7 +4,7 @@ Programação dinâmica
 
 ## Coin change
 
-- Considerando **$N$** como o número de moedas e **$N$** o valor do troco a dp retorna em complexidade **$O(N \times V)$** qual o número de maneiras possíveis de se entregar um troco de valor **$V$** com as **$N$** moedas disponíveis usando **$x$** moedas com **$x>=0$**
+- Considerando $N$ como o número de moedas e **$N$** o valor do troco a dp retorna em complexidade **$O(N \times V)$** qual o número de maneiras possíveis de se entregar um troco de valor **$V$** com as **$N$** moedas disponíveis usando **$x$** moedas com **$x>=0$**
 
 - É possível resolver o problema com um limite de moedas, sendo **lmt[i]** o número de modedas **i** disponíveis em complexidade **$O((N \times V$) + ($N \times 2 \times 2^N))$**
 
