@@ -75,13 +75,58 @@ int knapSack(int w, int wt[], int val[], int n){
 <div style="page-break-after: always;"></div>
 
 
-## LIS 
+## Longest Increasing Subsequence (LIS)
 
-- Cáculculo da lis em complexidade **O(N log N)** 
-- A recuperação do caminho pode ser feita pelo array pred começando do pred com o maior valor de lis
+- **lis**: Cáculculo da maior subsequencia crescente em complexidade <img src="https://latex.codecogs.com/gif.latexs?O(N%20%5Ctimes%20log(N))"> com **x[i+1]>x[i]**. Caso precise que **x[i+1]>=x[i]** basta mudar o **lower_bound** para **upper_bound**. Caso não precise de recuperar o caminho ignore os códigos com o comentário *path recover*
+  
+- **get_path**: Após chamar a lis é possível recuperar o caminho ultilizando essa função com complexidade <img src="https://latex.codecogs.com/gif.latexs?O(N)">
 
 ```c++
+#define MAXN 200010
 
+int mem[MAXN];
+
+/* path recover*/
+int pred[MAXN];
+int last[MAXN];
+int val[MAXN];
+unordered_map<int, int> comp;
+/* --- */
+
+int lis(vector<int>& vs){
+	/* path recover */
+	memset(pred, -1, sizeof pred);
+	comp.clear();
+	int cp = 0;
+	for(auto &x:vs)
+	       if(comp.find(x) == comp.end()) comp[x] = cp++;
+	/* --- */
+
+	int n = vs.size();
+	int tam = 0;
+	for(int i=0; i<n; ++i){
+		int j = int(lower_bound(mem, mem+tam, vs[i])-mem);
+		if(j == tam) ++tam;
+		mem[j] = vs[i];
+
+		/* path recover */
+		val[i] = j;
+		if(j>0) pred[i] = last[comp[mem[j-1]]]; 
+		last[comp[vs[i]]] = i;
+		/* --- */
+	}
+	return tam;
+}
+vector<int> get_path(vector<int>& vs, int lis_size){
+	int i = last[comp[mem[lis_size-1]]]; 
+	vector<int> path;
+	while(i!=-1){
+		path.push_back(vs[i]);
+		i = pred[i];
+	}
+	reverse(all(path));
+	return path;
+}
 
 ```
 
