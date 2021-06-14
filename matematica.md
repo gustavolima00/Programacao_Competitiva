@@ -188,3 +188,86 @@ void conv(vector<base> a, vector<base> b, vector<base> &res){
 	fft(res, true);
 }
 ```
+
+<div style="page-break-after: always;"></div>
+
+<div style="page-break-after: always;"></div>
+
+# Matrizes
+
+## Descrição
+
+Funções para manipulação matricial, matrixExp calcula uma matriz m x m elevado a n em complexidade **O(m³log n)**
+
+```c++
+typedef vector<vector<int>> matrix;
+
+void printMatrix(matrix a){
+	int n = a.size();
+	int m = a[0].size();
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<m; ++j)
+			cout << a[i][j] << ' ';
+		cout << '\n';
+	}
+}
+
+matrix id(int n){
+	matrix a(n, vector<int>(n, 0));
+	for(int i=0; i<n; ++i) a[i][i] = 1;
+	return a;
+}
+
+matrix operator +(matrix a, matrix b){
+	int n = a.size();
+	int m = a[0].size();
+	matrix c;
+	c.resize(n);
+	for(int i=0; i<n; ++i){
+		c[i].resize(m);
+		for(int j=0; j<m; ++j)
+			c[i][j] = a[i][j] + b[i][j];
+	}
+	return c;
+}
+
+matrix operator * (matrix a, matrix b){
+	int n = a.size();
+	int m = b.size();
+	int p = b[0].size();
+	matrix c(n, vector<int>(p));
+	vector<int> col(m);
+	for(int j=0; j<p; ++j){
+		for(int k=0; k<m; ++k)
+			col[k] = b[k][j]; // cache friendly
+		for(int i=0; i<n; ++i){
+			int s = 0;
+			for(int k=0; k<m; ++k)
+				s += a[i][k]*col[k];
+			c[i][j] = s;
+		}
+	}
+	return c;
+}
+
+matrix operator *(int k, matrix a){
+	int n = a.size();
+	int m = a[0].size();
+	for(int i=0; i<n; ++i) 
+		for(int j=0; j<m; ++j)
+			a[i][j] *= k;
+	return a;
+}
+
+matrix operator -(matrix a, matrix b){
+	return a + ((-1LL)*b);
+}
+
+matrix matrixExp(matrix a, int n){
+	if(n==0) return id(a.size());
+	matrix c = matrixExp(a, n/2);
+	c = c*c;
+	if(n%2 != 0) c = c*a;
+	return c;
+}
+```
