@@ -324,3 +324,82 @@ void join(int i, int j){
 	}
 }
 ```
+
+<div style="page-break-after: always;"></div>
+
+## Sqrt Decomposition
+
+Aqui os valores de MAXN e MAXQ devem ser atualizados conforme o problema, em geral é comum colocar MAXQ como raiz de MAXN
+
+Construção em O(N sqrt N) consulta em O(sqrt N)
+
+As funções simple_query e combine podem ser alteradas dependendo do problema, e os tipos do vertor inicial e do vetor de respostas também.
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+#define MAXN 200010
+#define MAXQ 450
+#define ff first
+#define ss second
+int vs[MAXN];
+ll sq[MAXQ];
+
+ll simple_query(int l, int r){
+    ll ans = 0;
+    for(int i=0; i<r; ++i) ans+=vs[i];
+    return ans;
+}
+
+ll combine(ll x, ll y){
+    return x+y;
+}
+
+ll query(int l, int r){
+	int p1 = min(r, MAXQ*(1+(l/MAXQ)));
+	int p2 = max(p1, MAXQ*(r/MAXQ));
+
+	auto ans = simple_query(l, p1);
+    
+	for(int j=(l/MAXQ)+1; j<(r/MAXQ); ++j){
+		ans = combine(ans, sq[j]);
+	}
+	ans = combine(ans, simple_query(p2, r));
+	return ans;
+}
+
+void build(int j){
+	int l = MAXQ*j, r = l+MAXQ;
+	sq[j] = simple_query(l, r);
+}
+
+int32_t main(){
+	int n, q;
+	cin >> n >> q;
+	for(int i=0; i<n; ++i){
+		cin >> vs[i];
+	}
+	for(int j=0; j<(n/MAXQ)+1; ++j){
+		build(j);
+	}
+	while(q--){
+		int p;
+		cin >> p;
+		if(p==1){
+			int i, x;
+			cin >> i >> x;
+			--i;
+			update(i, x);
+		}
+		else{
+			int l, r;
+			cin >> l >> r;
+			--l;
+			cout << query(l, r) << '\n';
+		}
+	
+	}
+}
+
+``` 
