@@ -15,3 +15,4 @@
 [PDF](programacao_dinamica.pdf)
 - [7.Geometria computacional](geometria_computacional.md)
 [PDF](geometria_computacional.pdf)
+- [8.Strings](strings.md)
