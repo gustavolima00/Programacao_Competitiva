@@ -90,7 +90,7 @@ public:
         vector<ll> ps;
         vector<ll> is;
 
-        StringHash(string s = "", ll _p = 31, ll _q = 1e9+7){
+        StringHash(string s = "", ll _p = 31, ll _q = 1e9+103){
                 q = _q;
                 p = _p;
                 auto n = s.size();
@@ -125,7 +125,7 @@ class StringDoubleHash{
         private:
                 StringHash h1, h2;
         public:
-                StringDoubleHash(string s, ll p1 = 31, ll p2 = 29, ll q1 = 1e9+7, ll q2 = 1e9+9){
+                StringDoubleHash(string s, ll p1 = 31, ll p2 = 29, ll q1 = 1e9+103, ll q2 = 1e9+9){
                         h1 = StringHash(s, p1, q1);
                         h2 = StringHash(s, p2, q2);
                 }
@@ -166,3 +166,45 @@ int unique_substrings(const string& s){
 
 ```
 
+
+## Manacher's Algorithm - Finding all sub-palindromes in O(N)
+
+```c++
+vector<int> manacher_odd(string s) {
+    int n = s.size();
+    s = "$" + s + "^";
+    vector<int> p(n + 2);
+    int l = 1, r = 1;
+    for(int i = 1; i <= n; i++) {
+        p[i] = max(0, min(r - i, p[l + (r - i)]));
+        while(s[i - p[i]] == s[i + p[i]]) {
+            p[i]++;
+        }
+        if(i + p[i] > r) {
+            l = i - p[i], r = i + p[i];
+        }
+    }
+    return vector<int>(begin(p) + 1, end(p) - 1);
+}
+
+vector<int> manacher(string s) {
+    string t;
+    for(auto c: s) {
+        t += string("#") + c;
+    }
+    auto res = manacher_odd(t + "#");
+    return vector<int>(begin(res) + 1, end(res) - 1);
+}
+
+// Exemplo de uso
+int main(){
+        string s = "amanaplanacanal";
+        auto v = manacher(s);
+        for(auto &x:v) --x;
+
+        function<bool(int, int)> is_palindrom = (int l, int r){
+                return v[l+r] == (r-l+1);
+        }
+}
+
+``` 
